@@ -27,6 +27,10 @@
   color: #111;
 }
 
+.link {
+  color: #111
+}
+
 @media (min-width: 1290px) {
 
   .aboutMe {
