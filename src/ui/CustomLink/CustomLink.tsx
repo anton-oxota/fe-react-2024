@@ -2,18 +2,12 @@ import React from 'react';
 
 import styles from './CustomLink.module.css';
 
-interface CustomLinkProps {
-    children: React.ReactNode;
-    href: string;
-    ['string']?: string;
-}
-
-function CustomLink(props: CustomLinkProps) {
+function CustomLink({ className, target = '_blank', children, ...restProps }: React.ComponentProps<'a'>) {
     return (
         <>
             &#32;
-            <a className={styles.link} target="blank" {...props}>
-                {props.children}
+            <a className={`${styles.link} ${className}`} target={target} {...restProps}>
+                {children}
             </a>
             &#32;
         </>
