@@ -1,4 +1,145 @@
 .header {
-  font-size: 34px;
-  text-align: center;
+  padding: 15px 0;
+  background-color: var(--darkest-grey);
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.theme {
+  display: none;
+}
+
+.nav {
+  display: none;
+}
+
+.login {
+  display: none;
+}
+
+.signUp {
+  display: none;
+}
+
+
+@media (min-width: 1290px) {
+
+  .header {
+    padding: 17px 0;
+  }
+
+  .container {
+    width: 1175px;
+  }
+
+  .logo {
+    width: 46px;
+    height: 46px;
+  }
+
+  .logo > svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover
+  }
+
+  .theme {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 49px;
+  }
+
+  .themeButton > svg {
+    opacity: .3;
+    transition: .3s all;
+  }
+
+  .themeButton:hover > svg {
+    opacity: 1;
+  }
+
+  .themeButton.themeActive > svg {
+    opacity: 1;
+  }
+
+  .nav {
+    margin-left: auto;
+    display: block;
+  }
+
+  .navWrapper {
+    display: flex;
+    align-items: center;
+    gap: 49px
+  }
+
+  .navLink {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    color: #FFF;
+    text-decoration: none;
+  }
+
+  .navLinkActive {
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFF;
+    text-decoration: none;
+  }
+
+  .actions {
+    margin-left: 124px;
+  }
+
+  .menu {
+    display: none;
+  }
+
+  .login {
+    padding: 5px 10px;
+    margin-left: 32px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 40px;
+    padding: 5px 10px;
+    background: #333;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    color: #FFF;
+  }
+
+  .signUp {
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 40px;
+    padding: 5px 10px;
+    background: #EF4934;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    color: #FFF;
+  }
 }

@@ -1,15 +1,17 @@
 import AboutMe from './components/AboutMe/AboutMe.tsx';
-import { HeaderComponent } from './components/header/Header.component.tsx';
+import Footer from './components/Footer/Footer.tsx';
+import Header from './components/Header/Header.tsx';
 
 // import styles from './App.module.css';
 
 function App() {
     return (
         <>
-            <HeaderComponent />
+            <Header />
             <main className="home">
                 <AboutMe />
             </main>
+            <Footer />
         </>
     );
 }
