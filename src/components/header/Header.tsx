@@ -62,7 +62,7 @@ function Header() {
                             Login
                         </button>
 
-                        <button className={styles.signUp} title="Sign up">
+                        <button className={styles.signUp} title="Sign">
                             <SingUpIcon />
                             Sign Up
                         </button>
