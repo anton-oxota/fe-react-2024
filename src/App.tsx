@@ -1,13 +1,13 @@
 import AboutMe from './components/AboutMe/AboutMe.tsx';
 import Footer from './components/Footer/Footer.tsx';
-// import Header from './components/Header/Header.component.tsx';
+import HeaderComponent from './components/HeaderComponent/HeaderComponent.tsx';
 
 // import styles from './App.module.css';
 
 function App() {
     return (
         <>
-            {/* <Header /> */}
+            <HeaderComponent />
             <main className="home">
                 <AboutMe />
             </main>

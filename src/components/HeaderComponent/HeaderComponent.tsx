@@ -10,7 +10,7 @@ import SingUpIcon from '../../assets/icons/user_add.svg?react';
 
 import styles from './header.module.css';
 
-function Header() {
+function HeaderComponent() {
     return (
         <header className={styles.header}>
             <div className="container">
@@ -73,4 +73,4 @@ function Header() {
     );
 }
 
-export default Header;
+export default HeaderComponent;
