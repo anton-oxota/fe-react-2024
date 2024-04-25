@@ -1,7 +1,7 @@
 import React from 'react';
 
-import CustomLink from '@/ui/CustomLink/CustomLink';
-import Socials from '@/ui/Socials/Socials';
+import { CustomLink } from '@/ui/CustomLink/CustomLink';
+import { Socials } from '@/ui/Socials/Socials';
 
 import styles from './Footer.module.css';
 
@@ -24,4 +24,4 @@ function Footer() {
     );
 }
 
-export default Footer;
+export { Footer };

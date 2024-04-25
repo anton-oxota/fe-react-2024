@@ -1,12 +1,13 @@
 import React from 'react';
 
-import LoginIcon from '../../assets/icons/log_out.svg?react';
-import LogoIcon from '../../assets/icons/logo.svg?react';
-import MenuIcon from '../../assets/icons/menu_duo_lg.svg?react';
-import DarkThemeIcon from '../../assets/icons/moon.svg?react';
-import CartIcon from '../../assets/icons/shopping_cart_01.svg?react';
-import LightThemeIcon from '../../assets/icons/sun.svg?react';
-import SingUpIcon from '../../assets/icons/user_add.svg?react';
+import ThemeDivider from '@assets/icons/h-divider.svg?react';
+import LoginIcon from '@assets/icons/log_out.svg?react';
+import LogoIcon from '@assets/icons/logo.svg?react';
+import MenuIcon from '@assets/icons/menu_duo_lg.svg?react';
+import DarkThemeIcon from '@assets/icons/moon.svg?react';
+import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
+import LightThemeIcon from '@assets/icons/sun.svg?react';
+import SingUpIcon from '@assets/icons/user_add.svg?react';
 
 import styles from './header.module.css';
 
@@ -24,9 +25,7 @@ function HeaderComponent() {
                             <LightThemeIcon />
                         </button>
 
-                        <svg width="2" height="20" viewBox="0 0 2 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 0V20" stroke="#656565" />
-                        </svg>
+                        <ThemeDivider />
 
                         <button className={styles.themeButton} title="Dark theme">
                             <DarkThemeIcon />
@@ -73,4 +72,4 @@ function HeaderComponent() {
     );
 }
 
-export default HeaderComponent;
+export { HeaderComponent };

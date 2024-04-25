@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CustomLink from '@/ui/CustomLink/CustomLink';
+import { CustomLink } from '@/ui/CustomLink/CustomLink';
 
 import imgSource from '../../assets/AboutMe/about_img.png';
 
@@ -31,4 +31,4 @@ function AboutMe() {
     );
 }
 
-export default AboutMe;
+export { AboutMe };

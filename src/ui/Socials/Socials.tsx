@@ -3,7 +3,7 @@ import React from 'react';
 import FbIcon from '../../assets/icons/fb.svg?react';
 import IstagramIcon from '../../assets/icons/insta.svg?react';
 import LinkedInIcon from '../../assets/icons/linkedin.svg?react';
-import SocialIcon from '../SocialIcon/SocialIcon';
+import { SocialIcon } from '../SocialIcon/SocialIcon';
 
 import styles from './Socials.module.css';
 
@@ -23,4 +23,4 @@ function Socials({ className, ...restProps }: React.ComponentProps<'ul'>) {
     );
 }
 
-export default Socials;
+export { Socials };

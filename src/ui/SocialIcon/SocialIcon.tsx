@@ -12,4 +12,4 @@ function SocialIcon({ children, href }: React.ComponentProps<'a'>) {
     );
 }
 
-export default SocialIcon;
+export { SocialIcon };
