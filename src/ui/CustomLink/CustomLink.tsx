@@ -14,4 +14,4 @@ function CustomLink({ className, target = '_blank', children, ...restProps }: Re
     );
 }
 
-export default CustomLink;
+export { CustomLink };

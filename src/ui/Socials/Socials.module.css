@@ -1,0 +1,12 @@
+.socials {
+  display: flex;
+  gap: 25px;
+  list-style-type: none;
+}
+
+@media (min-width: 1290px) {
+
+  .socials {
+    gap: 30px;
+  }
+}

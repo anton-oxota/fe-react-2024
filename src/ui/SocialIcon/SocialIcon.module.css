@@ -1,0 +1,19 @@
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.socialLink > svg {
+  width: 25px;
+  height: 25px;
+  object-fit: cover;
+}
+
+@media (min-width: 1290px) {
+
+  .socialLink > svg {
+    width: 35px;
+    height: 35px;
+  }
+}
