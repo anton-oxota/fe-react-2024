@@ -44,20 +44,20 @@ function HeaderComponent({ onChangePage, activePage, cartData }: HeaderComponent
                     <nav className={styles.nav}>
                         <ul className={styles.navWrapper}>
                             <li>
-                                <a
+                                <button
                                     className={activePage === 'about' ? styles.navLinkActive : styles.navLink}
                                     onClick={() => onChangePage('about')}
                                 >
                                     About
-                                </a>
+                                </button>
                             </li>
                             <li>
-                                <a
+                                <button
                                     className={activePage === 'products' ? styles.navLinkActive : styles.navLink}
                                     onClick={() => onChangePage('products')}
                                 >
                                     Products
-                                </a>
+                                </button>
                             </li>
                         </ul>
                     </nav>
