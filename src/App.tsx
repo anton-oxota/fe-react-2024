@@ -5,14 +5,10 @@ import { Footer } from './components/Footer/Footer.tsx';
 import { Header } from './components/Header/Header.tsx';
 import { ProductsList } from './components/ProductsList/ProductsList.tsx';
 import { PRODUCTS_DATA } from './data/data.ts';
+import { PageName } from './interfaces/Pages.ts';
 import type { Product } from './interfaces/Product.ts';
 
 // import styles from './App.module.css';
-
-export enum PagesEnum {
-    ABOUT = 'about',
-    PRODUCTS = 'products',
-}
 
 export type AddToCartHandler = (item: Product) => void;
 
@@ -21,10 +17,10 @@ const CardKey = 'cart';
 function App() {
     const localCart: Product[] = localStorage.getItem(CardKey) ? JSON.parse(localStorage.getItem(CardKey)!) : [];
 
-    const [currentPage, setCurrentPage] = useState<PagesEnum>(PagesEnum.ABOUT);
+    const [currentPage, setCurrentPage] = useState<PageName>(PageName.ABOUT);
     const [cartData, setCartData] = useState<Product[]>(localCart);
 
-    function handleChangePage(page: PagesEnum) {
+    function handleChangePage(page: PageName) {
         setCurrentPage(page);
     }
 
@@ -36,8 +32,8 @@ function App() {
         });
     }
     const content = {
-        [PagesEnum.ABOUT]: <AboutMe />,
-        [PagesEnum.PRODUCTS]: <ProductsList data={PRODUCTS_DATA} handleAddToCart={handleAddToCart} cartData={cartData} />,
+        [PageName.ABOUT]: <AboutMe />,
+        [PageName.PRODUCTS]: <ProductsList data={PRODUCTS_DATA} handleAddToCart={handleAddToCart} cartData={cartData} />,
     };
 
     return (

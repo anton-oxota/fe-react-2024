@@ -9,14 +9,14 @@ import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 import LightThemeIcon from '@assets/icons/sun.svg?react';
 import SingUpIcon from '@assets/icons/user_add.svg?react';
 
-import { PagesEnum } from '@/App';
+import { PageName } from '@/interfaces/Pages';
 import type { Product } from '@/interfaces/Product';
 
 import styles from './header.module.css';
 
 interface HeaderProps {
-    onChangePage: (page: PagesEnum) => void;
-    activePage: PagesEnum;
+    onChangePage: (page: PageName) => void;
+    activePage: PageName;
     cartData: Array<Product>;
 }
 
@@ -45,16 +45,16 @@ function Header({ onChangePage, activePage, cartData }: HeaderProps) {
                         <ul className={styles.navWrapper}>
                             <li>
                                 <button
-                                    className={activePage === PagesEnum.ABOUT ? styles.navLinkActive : styles.navLink}
-                                    onClick={() => onChangePage(PagesEnum.ABOUT)}
+                                    className={activePage === PageName.ABOUT ? styles.navLinkActive : styles.navLink}
+                                    onClick={() => onChangePage(PageName.ABOUT)}
                                 >
                                     About
                                 </button>
                             </li>
                             <li>
                                 <button
-                                    className={activePage === PagesEnum.PRODUCTS ? styles.navLinkActive : styles.navLink}
-                                    onClick={() => onChangePage(PagesEnum.PRODUCTS)}
+                                    className={activePage === PageName.PRODUCTS ? styles.navLinkActive : styles.navLink}
+                                    onClick={() => onChangePage(PageName.PRODUCTS)}
                                 >
                                     Products
                                 </button>
