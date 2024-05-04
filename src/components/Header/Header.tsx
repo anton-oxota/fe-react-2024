@@ -9,18 +9,18 @@ import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 import LightThemeIcon from '@assets/icons/sun.svg?react';
 import SingUpIcon from '@assets/icons/user_add.svg?react';
 
-import type { Pages } from '@/App';
+import { PagesEnum } from '@/App';
 import type { Product } from '@/interfaces/Product';
 
 import styles from './header.module.css';
 
-interface HeaderComponentProps {
-    onChangePage: (page: Pages) => void;
-    activePage: Pages;
+interface HeaderProps {
+    onChangePage: (page: PagesEnum) => void;
+    activePage: PagesEnum;
     cartData: Array<Product>;
 }
 
-function HeaderComponent({ onChangePage, activePage, cartData }: HeaderComponentProps) {
+function Header({ onChangePage, activePage, cartData }: HeaderProps) {
     return (
         <header className={styles.header}>
             <div className="container">
@@ -45,16 +45,16 @@ function HeaderComponent({ onChangePage, activePage, cartData }: HeaderComponent
                         <ul className={styles.navWrapper}>
                             <li>
                                 <button
-                                    className={activePage === 'about' ? styles.navLinkActive : styles.navLink}
-                                    onClick={() => onChangePage('about')}
+                                    className={activePage === PagesEnum.ABOUT ? styles.navLinkActive : styles.navLink}
+                                    onClick={() => onChangePage(PagesEnum.ABOUT)}
                                 >
                                     About
                                 </button>
                             </li>
                             <li>
                                 <button
-                                    className={activePage === 'products' ? styles.navLinkActive : styles.navLink}
-                                    onClick={() => onChangePage('products')}
+                                    className={activePage === PagesEnum.PRODUCTS ? styles.navLinkActive : styles.navLink}
+                                    onClick={() => onChangePage(PagesEnum.PRODUCTS)}
                                 >
                                     Products
                                 </button>
@@ -88,4 +88,4 @@ function HeaderComponent({ onChangePage, activePage, cartData }: HeaderComponent
     );
 }
 
-export { HeaderComponent };
+export { Header };

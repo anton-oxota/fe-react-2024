@@ -1,5 +1,6 @@
 import React from 'react';
 
+import type { AddToCartHandler } from '@/App';
 import type { Product } from '@/interfaces/Product';
 
 import { ProductCard } from '../ProductCard/ProductCard';
@@ -8,7 +9,7 @@ import styles from './ProductsList.module.css';
 
 interface ProductsListProps {
     data: Product[];
-    handleAddToCart: (item: Product) => void;
+    handleAddToCart: AddToCartHandler;
     cartData: Product[];
 }
 

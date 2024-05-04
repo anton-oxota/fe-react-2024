@@ -27,7 +27,7 @@
   font-weight: 600;
   font-size: 22px;
   line-height: 114%;
-  color: #111;
+  color: var(--darkest-grey);
 }
 
 .info {
@@ -42,14 +42,14 @@
   font-family: var(--font-family);
   font-weight: 600;
   font-size: 24px;
-  color: #111;
+  color: var(--darkest-grey);
 }
 
 .price >span {
   font-family: var(--font-family);
   font-weight: 600;
   font-size: 14px;
-  color: #111;
+  color: var(--darkest-grey);
 }
 
 .buy {

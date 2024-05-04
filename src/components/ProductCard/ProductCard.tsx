@@ -2,14 +2,15 @@ import React from 'react';
 
 import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 
+import type { AddToCartHandler } from '@/App';
 import type { Product } from '@/interfaces/Product';
 
-import headerStyles from '../../components/HeaderComponent/header.module.css';
+import headerStyles from '../../components/Header/header.module.css';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
     productData: Product;
-    onAddToCart: (item: Product) => void;
+    onAddToCart: AddToCartHandler;
     cartData: Product[];
 }
 

@@ -1,24 +1,30 @@
-// import { AboutMe } from './components/AboutMe/AboutMe.tsx';
 import { useState } from 'react';
 
 import { AboutMe } from './components/AboutMe/AboutMe.tsx';
 import { Footer } from './components/Footer/Footer.tsx';
-import { HeaderComponent } from './components/HeaderComponent/HeaderComponent.tsx';
+import { Header } from './components/Header/Header.tsx';
 import { ProductsList } from './components/ProductsList/ProductsList.tsx';
 import { PRODUCTS_DATA } from './data/data.ts';
 import type { Product } from './interfaces/Product.ts';
 
 // import styles from './App.module.css';
 
-export type Pages = 'about' | 'products';
+export enum PagesEnum {
+    ABOUT = 'about',
+    PRODUCTS = 'products',
+}
+
+export type AddToCartHandler = (item: Product) => void;
+
+const CardKey = 'cart';
 
 function App() {
-    const localCart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')!) : [];
+    const localCart: Product[] = localStorage.getItem(CardKey) ? JSON.parse(localStorage.getItem(CardKey)!) : [];
 
-    const [currentPage, setCurrentPage] = useState<Pages>('about');
-    const [cartData, setCartData] = useState<Array<Product> | []>(localCart);
+    const [currentPage, setCurrentPage] = useState<PagesEnum>(PagesEnum.ABOUT);
+    const [cartData, setCartData] = useState<Product[]>(localCart);
 
-    function handleChangePage(page: Pages) {
+    function handleChangePage(page: PagesEnum) {
         setCurrentPage(page);
     }
 
@@ -29,26 +35,15 @@ function App() {
             return updatedCart;
         });
     }
-    let content;
-
-    switch (currentPage) {
-        case 'about': {
-            content = <AboutMe />;
-            break;
-        }
-        case 'products': {
-            content = <ProductsList data={PRODUCTS_DATA} handleAddToCart={handleAddToCart} cartData={cartData} />;
-            break;
-        }
-        default: {
-            content = <AboutMe />;
-        }
-    }
+    const content = {
+        [PagesEnum.ABOUT]: <AboutMe />,
+        [PagesEnum.PRODUCTS]: <ProductsList data={PRODUCTS_DATA} handleAddToCart={handleAddToCart} cartData={cartData} />,
+    };
 
     return (
         <>
-            <HeaderComponent onChangePage={handleChangePage} activePage={currentPage} cartData={cartData} />
-            <main className="home">{content}</main>
+            <Header onChangePage={handleChangePage} activePage={currentPage} cartData={cartData} />
+            <main className="home">{content[currentPage]}</main>
             <Footer />
         </>
     );
