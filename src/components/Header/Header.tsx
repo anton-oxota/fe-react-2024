@@ -9,9 +9,18 @@ import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 import LightThemeIcon from '@assets/icons/sun.svg?react';
 import SingUpIcon from '@assets/icons/user_add.svg?react';
 
+import { PageName } from '@/interfaces/Pages';
+import type { Product } from '@/interfaces/Product';
+
 import styles from './header.module.css';
 
-function HeaderComponent() {
+interface HeaderProps {
+    onChangePage: (page: PageName) => void;
+    activePage: PageName;
+    cartData: Array<Product>;
+}
+
+function Header({ onChangePage, activePage, cartData }: HeaderProps) {
     return (
         <header className={styles.header}>
             <div className="container">
@@ -35,20 +44,27 @@ function HeaderComponent() {
                     <nav className={styles.nav}>
                         <ul className={styles.navWrapper}>
                             <li>
-                                <a className={styles.navLinkActive} href="/">
+                                <button
+                                    className={activePage === PageName.ABOUT ? styles.navLinkActive : styles.navLink}
+                                    onClick={() => onChangePage(PageName.ABOUT)}
+                                >
                                     About
-                                </a>
+                                </button>
                             </li>
                             <li>
-                                <a className={styles.navLink} href="/">
+                                <button
+                                    className={activePage === PageName.PRODUCTS ? styles.navLinkActive : styles.navLink}
+                                    onClick={() => onChangePage(PageName.PRODUCTS)}
+                                >
                                     Products
-                                </a>
+                                </button>
                             </li>
                         </ul>
                     </nav>
 
                     <div className={styles.actions}>
                         <button className={styles.cart} title="Cart">
+                            {cartData.length > 0 && <span>{cartData.length}</span>}
                             <CartIcon />
                         </button>
 
@@ -72,4 +88,4 @@ function HeaderComponent() {
     );
 }
 
-export { HeaderComponent };
+export { Header };
