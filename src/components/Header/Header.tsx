@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
 import LoginIcon from '@assets/icons/log_out.svg?react';
@@ -11,8 +11,11 @@ import SingUpIcon from '@assets/icons/user_add.svg?react';
 
 import { PageName } from '@/interfaces/Pages';
 import type { Product } from '@/interfaces/Product';
+import type { Themes } from '@/interfaces/Themes';
 
 import styles from './header.module.css';
+
+const htmlElement = document.querySelector('html');
 
 interface HeaderProps {
     onChangePage: (page: PageName) => void;
@@ -20,7 +23,26 @@ interface HeaderProps {
     cartData: Array<Product>;
 }
 
+const isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+
 function Header({ onChangePage, activePage, cartData }: HeaderProps) {
+    let initialThemeState: Themes;
+    const localTheme = localStorage.getItem('theme') as Themes | null;
+
+    if (localTheme) {
+        initialThemeState = localTheme;
+    } else {
+        initialThemeState = isLightTheme ? 'light' : 'dark';
+    }
+
+    const [theme, setTheme] = useState<Themes>(initialThemeState);
+    htmlElement!.dataset.theme = theme;
+
+    function handleChangeTheme(themeText: Themes) {
+        setTheme(themeText);
+        localStorage.setItem('theme', themeText);
+    }
+
     return (
         <header className={styles.header}>
             <div className="container">
@@ -30,13 +52,21 @@ function Header({ onChangePage, activePage, cartData }: HeaderProps) {
                     </a>
 
                     <div className={styles.theme}>
-                        <button className={`${styles.themeButton} ${styles.themeActive}`} title="Light theme">
+                        <button
+                            className={`${styles.themeButton} ${theme === 'light' ? styles.themeActive : ''}`}
+                            title="Light theme"
+                            onClick={() => handleChangeTheme('light')}
+                        >
                             <LightThemeIcon />
                         </button>
 
                         <ThemeDivider />
 
-                        <button className={styles.themeButton} title="Dark theme">
+                        <button
+                            className={`${styles.themeButton} ${theme === 'dark' ? styles.themeActive : ''}`}
+                            title="Dark theme"
+                            onClick={() => handleChangeTheme('dark')}
+                        >
                             <DarkThemeIcon />
                         </button>
                     </div>

@@ -1,6 +1,6 @@
 .header {
   padding: 15px 0;
-  background-color: var(--darkest-grey);
+  background-color: #111;
 }
 
 .wrapper {
@@ -40,7 +40,7 @@
   font-weight: 700;
   font-size: 10px;
   text-align: center;
-  color: var(--darkest-grey);
+  color: #111;
 }
 
 .theme {
@@ -109,14 +109,15 @@
   .navWrapper {
     display: flex;
     align-items: center;
-    gap: 49px
+    gap: 49px;
+    list-style: none;
   }
 
   .navLink {
     font-family: var(--font-family);
     font-weight: 500;
     font-size: 16px;
-    color: var(--white);
+    color: #FFF;
     text-decoration: none;
     cursor: pointer;
   }
@@ -125,7 +126,7 @@
     font-family: var(--font-family);
     font-weight: 700;
     font-size: 16px;
-    color: var(--white);
+    color: #FFF;
     text-decoration: none;
     cursor: pointer;
   }
@@ -150,7 +151,7 @@
     font-family: var(--font-family);
     font-weight: 500;
     font-size: 16px;
-    color: var(--white);
+    color: #FFF;
   }
 
   .signUp {
@@ -164,6 +165,6 @@
     font-family: var(--font-family);
     font-weight: 500;
     font-size: 16px;
-    color: var(--white);
+    color: #FFF;
   }
 }

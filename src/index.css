@@ -1,6 +1,9 @@
 :root {
   --font-family: "Montserrat", sans-serif;
   --main-red: #EF4934;
+}
+
+:root[data-theme="light"] {
   --hover-red: #D43824;
   --darkest-grey: #111;
   --grey-1: #333;
@@ -11,8 +14,21 @@
   --white: #FFF;
 }
 
+:root[data-theme="dark"] {
+  --white: #111;
+  --darkest-grey: #FFF;
+  --grey-1: #F1F1F1;
+  --grey-3: #333;
+  --grey-4: #656565;
+}
+
 html {
   font-family: var(--font-family);
+}
+
+body {
+  background-color: var(--white);
+  color: var(--darkest-grey)
 }
 
 * {
