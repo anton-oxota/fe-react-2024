@@ -17,7 +17,7 @@
 }
 
 .courseLink {
-  color: #EF4934;
+  color: var(--main-red);
 }
 
 @media (min-width: 1290px) {

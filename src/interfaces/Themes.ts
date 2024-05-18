@@ -1,1 +1,4 @@
-export type Themes = 'light' | 'dark';
+export enum PageTheme {
+    LIGHT = 'light',
+    DARK = 'dark',
+}

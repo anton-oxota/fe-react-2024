@@ -32,7 +32,7 @@
   font-family: var(--font-family);
   font-weight: 600;
   font-size: 14px;
-  color: var(--grey-2);
+  color: var(--darkest-grey);
 }
 
 .selectorMenu button:hover {
@@ -52,7 +52,7 @@
 }
 
 .selectorButton > svg path {
-  stroke: var(--grey-2);
+  stroke: var(--darkest-grey);
 }
 
 .selectorButton:hover > svg path {

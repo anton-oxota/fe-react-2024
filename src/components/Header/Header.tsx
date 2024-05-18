@@ -11,7 +11,7 @@ import SingUpIcon from '@assets/icons/user_add.svg?react';
 
 import { PageName } from '@/interfaces/Pages';
 import type { Product } from '@/interfaces/Product';
-import type { Themes } from '@/interfaces/Themes';
+import { PageTheme } from '@/interfaces/Themes';
 
 import styles from './header.module.css';
 
@@ -26,19 +26,19 @@ interface HeaderProps {
 const isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
 
 function Header({ onChangePage, activePage, cartData }: HeaderProps) {
-    let initialThemeState: Themes;
-    const localTheme = localStorage.getItem('theme') as Themes | null;
+    let initialThemeState: PageTheme;
+    const localTheme = localStorage.getItem('theme') as PageTheme | null;
 
     if (localTheme) {
         initialThemeState = localTheme;
     } else {
-        initialThemeState = isLightTheme ? 'light' : 'dark';
+        initialThemeState = isLightTheme ? PageTheme.LIGHT : PageTheme.DARK;
     }
 
-    const [theme, setTheme] = useState<Themes>(initialThemeState);
+    const [theme, setTheme] = useState<PageTheme>(initialThemeState);
     htmlElement!.dataset.theme = theme;
 
-    function handleChangeTheme(themeText: Themes) {
+    function handleChangeTheme(themeText: PageTheme) {
         setTheme(themeText);
         localStorage.setItem('theme', themeText);
     }
@@ -53,9 +53,9 @@ function Header({ onChangePage, activePage, cartData }: HeaderProps) {
 
                     <div className={styles.theme}>
                         <button
-                            className={`${styles.themeButton} ${theme === 'light' ? styles.themeActive : ''}`}
+                            className={`${styles.themeButton} ${theme === PageTheme.LIGHT ? styles.themeActive : ''}`}
                             title="Light theme"
-                            onClick={() => handleChangeTheme('light')}
+                            onClick={() => handleChangeTheme(PageTheme.LIGHT)}
                         >
                             <LightThemeIcon />
                         </button>
@@ -63,9 +63,9 @@ function Header({ onChangePage, activePage, cartData }: HeaderProps) {
                         <ThemeDivider />
 
                         <button
-                            className={`${styles.themeButton} ${theme === 'dark' ? styles.themeActive : ''}`}
+                            className={`${styles.themeButton} ${theme === PageTheme.DARK ? styles.themeActive : ''}`}
                             title="Dark theme"
-                            onClick={() => handleChangeTheme('dark')}
+                            onClick={() => handleChangeTheme(PageTheme.DARK)}
                         >
                             <DarkThemeIcon />
                         </button>
