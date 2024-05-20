@@ -1,5 +1,5 @@
 .productCard {
-  border: 1px solid #CCC;
+  border: 1px solid var(--grey-3);
   border-radius: 20px;
   padding: 20px 15px 15px;
   width: 275px;
@@ -59,6 +59,6 @@
 }
 
 .buy > svg > path {
-  stroke: #000;
+  stroke: var(--darkest-grey);
 }
 

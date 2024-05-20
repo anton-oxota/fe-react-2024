@@ -17,7 +17,7 @@ const CardKey = 'cart';
 function App() {
     const localCart: Product[] = localStorage.getItem(CardKey) ? JSON.parse(localStorage.getItem(CardKey)!) : [];
 
-    const [currentPage, setCurrentPage] = useState<PageName>(PageName.ABOUT);
+    const [currentPage, setCurrentPage] = useState<PageName>(PageName.PRODUCTS);
     const [cartData, setCartData] = useState<Product[]>(localCart);
 
     function handleChangePage(page: PageName) {

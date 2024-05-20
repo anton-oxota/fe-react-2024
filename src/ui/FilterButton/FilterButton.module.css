@@ -1,0 +1,9 @@
+.button {
+  border: 1px solid var(--grey-4);
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--darkest-grey);
+}
