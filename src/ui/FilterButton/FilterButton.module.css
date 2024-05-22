@@ -7,3 +7,11 @@
   font-size: 14px;
   color: var(--darkest-grey);
 }
+
+.button:hover {
+  background-color: var(--hover-red);
+}
+
+.button.active {
+  background-color: var(--main-red);
+}

@@ -2,9 +2,14 @@ import React from 'react';
 
 import styles from './FilterButton.module.css';
 
-function FilterButton({ children, ...restProps }: React.ComponentProps<'button'>) {
+interface FilterButtonProps extends React.ComponentProps<'button'> {
+    filter: string;
+    isActive: boolean;
+}
+
+function FilterButton({ children, filter, isActive, ...restProps }: FilterButtonProps) {
     return (
-        <button className={styles.button} {...restProps}>
+        <button className={`${styles.button} ${isActive ? styles.active : ''}`} {...restProps}>
             {children}
         </button>
     );
