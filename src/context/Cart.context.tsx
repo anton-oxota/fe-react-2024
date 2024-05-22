@@ -7,7 +7,10 @@ interface CartContextInterface {
     handleAddToCart: (item: Product) => void;
 }
 
-export const CartContext = createContext<CartContextInterface>({});
+export const CartContext = createContext<CartContextInterface>({
+    cartData: [],
+    handleAddToCart: () => {},
+});
 
 interface CartContextProviderProperty {
     children: React.ReactNode;
