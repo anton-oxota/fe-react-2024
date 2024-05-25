@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 
-import { CartContext } from '@/context/Cart.context';
+import { useCartContext } from '@/hooks/useCartContext';
 import type { Product } from '@/interfaces/Product';
 
 import headerStyles from '../../components/Header/header.module.css';
@@ -13,7 +13,7 @@ interface ProductCardProps {
 }
 
 function ProductCard({ productData }: ProductCardProps) {
-    const { cartData, handleAddToCart } = useContext(CartContext);
+    const { cartData, handleAddToCart } = useCartContext();
     const itemsQty = cartData.filter((item) => item.title === productData.title);
 
     const title = productData.title.length > 30 ? `${productData.title.slice(0, 30)}...` : productData.title;

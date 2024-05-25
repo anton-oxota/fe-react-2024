@@ -1,6 +1,8 @@
 :root {
   --font-family: "Montserrat", sans-serif;
   --main-red: #EF4934;
+  --static-grey-2: #656565;
+  --static-white: #FFF
 }
 
 :root[data-theme="light"] {

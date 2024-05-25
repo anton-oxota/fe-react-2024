@@ -1,9 +1,8 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useState } from 'react';
 
+import { useProductsDataContext } from '@/hooks/useProductsDataContext';
 import { SortByEnum } from '@/interfaces/Filters';
 import type { Product } from '@/interfaces/Product';
-
-import { DataContext } from './Data.context';
 
 interface StateInterface {
     filters: string[];
@@ -12,8 +11,7 @@ interface StateInterface {
 }
 
 interface FilterContextInterface {
-    filteredData: Product[];
-
+    filteredProductsData: Product[];
     filtersState: StateInterface;
     toggleButtonFilter: (filter: string) => void;
     handleSearcFilter: (string: string) => void;
@@ -21,7 +19,7 @@ interface FilterContextInterface {
 }
 
 export const FilterContext = createContext<FilterContextInterface>({
-    filteredData: [],
+    filteredProductsData: [],
     filtersState: {
         filters: [],
         sortBy: SortByEnum.HIGH_TO_LOW,
@@ -37,7 +35,7 @@ interface FilterContextProviderProps {
 }
 
 function FilterContextProvider({ children }: FilterContextProviderProps) {
-    const { data } = useContext(DataContext);
+    const { productsData } = useProductsDataContext();
     const [filtersState, setFiltersState] = useState<StateInterface>({
         filters: [],
         sortBy: SortByEnum.HIGH_TO_LOW,
@@ -109,13 +107,9 @@ function FilterContextProvider({ children }: FilterContextProviderProps) {
         return filteredData;
     }
 
-    const filteredData = filterData(data);
-
-    // console.log(filteredData);
-
     const contextValue = {
         filtersState,
-        filteredData,
+        filteredProductsData: filterData(productsData),
         toggleButtonFilter,
         handleSearcFilter,
         handleSelectFilter,

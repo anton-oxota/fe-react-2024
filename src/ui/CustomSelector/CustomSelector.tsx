@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import ArrowDownIcon from '@assets/icons/Caret_Down_MD.svg?react';
 import ArrowUpIcon from '@assets/icons/Caret_Up_MD.svg?react';
 
-import { FilterContext } from '@/context/Filter.context';
+import { useFilterContext } from '@/hooks/useFilterContext';
 import type { SortByEnum } from '@/interfaces/Filters';
 
 import styles from './CustomSelector.module.css';
@@ -22,7 +22,7 @@ function CustomSelector({ selectors, title }: CustomSelectorProps) {
     const {
         filtersState: { sortBy },
         handleSelectFilter,
-    } = useContext(FilterContext);
+    } = useFilterContext();
 
     const [currentSelector, setCurrentSelector] = useState(selectors.find((sel) => sel.selector === sortBy));
     const [isOpen, setIsOpen] = useState(false);

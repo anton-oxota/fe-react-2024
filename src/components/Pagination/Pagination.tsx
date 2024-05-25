@@ -22,4 +22,4 @@ function Pagination({ currentPage, productCardsOnPage, data }: PaginationProps) 
     );
 }
 
-export default Pagination;
+export { Pagination };
