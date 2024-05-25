@@ -3,10 +3,11 @@ import { useContext } from 'react';
 import { FilterContext } from '@/context/Filter.context';
 
 function useFilterContext() {
-    const { filteredProductsData, filtersState, handleSearcFilter, handleSelectFilter, toggleButtonFilter } = useContext(FilterContext);
+    const { filteredAndSortedProductsData, filtersState, handleSearcFilter, handleSelectFilter, toggleButtonFilter } =
+        useContext(FilterContext);
 
     return {
-        filteredProductsData,
+        filteredAndSortedProductsData,
         filtersState,
         handleSearcFilter,
         handleSelectFilter,

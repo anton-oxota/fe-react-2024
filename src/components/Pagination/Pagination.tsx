@@ -7,11 +7,11 @@ import { ProductCard } from '../ProductCard/ProductCard';
 interface PaginationProps {
     currentPage: number;
     productCardsOnPage: number;
-    data: Product[];
+    productsData: Product[];
 }
 
-function Pagination({ currentPage, productCardsOnPage, data }: PaginationProps) {
-    const displayedData = data.slice((currentPage - 1) * productCardsOnPage, currentPage * productCardsOnPage);
+function Pagination({ currentPage, productCardsOnPage, productsData }: PaginationProps) {
+    const displayedData = productsData.slice((currentPage - 1) * productCardsOnPage, currentPage * productCardsOnPage);
 
     return (
         <>

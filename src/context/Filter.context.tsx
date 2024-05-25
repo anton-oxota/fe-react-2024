@@ -11,7 +11,7 @@ interface StateInterface {
 }
 
 interface FilterContextInterface {
-    filteredProductsData: Product[];
+    filteredAndSortedProductsData: Product[];
     filtersState: StateInterface;
     toggleButtonFilter: (filter: string) => void;
     handleSearcFilter: (string: string) => void;
@@ -19,7 +19,7 @@ interface FilterContextInterface {
 }
 
 export const FilterContext = createContext<FilterContextInterface>({
-    filteredProductsData: [],
+    filteredAndSortedProductsData: [],
     filtersState: {
         filters: [],
         sortBy: SortByEnum.HIGH_TO_LOW,
@@ -71,16 +71,17 @@ function FilterContextProvider({ children }: FilterContextProviderProps) {
         }));
     }
 
-    function filterData(dataArray: Product[]): Product[] {
-        const filteredData = dataArray.filter((item) => {
-            const isValidName =
-                filtersState.search.length === 0 ? true : item.title.toLowerCase().includes(filtersState.search.toLowerCase());
+    function filterProductsData(data: Product[]): Product[] {
+        return data.filter((item) => {
+            const isValidName = filtersState.search.length === 0 || item.title.toLowerCase().includes(filtersState.search.toLowerCase());
             const isValidCategory = filtersState.filters.length === 0 ? true : filtersState.filters.includes(item.category.name);
 
             return isValidName && isValidCategory;
         });
+    }
 
-        filteredData.sort((a, b) => {
+    function sortProductsData(dataArray: Product[]): Product[] {
+        return dataArray.sort((a, b) => {
             switch (filtersState.sortBy) {
                 case SortByEnum.HIGH_TO_LOW: {
                     return b.price - a.price;
@@ -103,13 +104,13 @@ function FilterContextProvider({ children }: FilterContextProviderProps) {
                 }
             }
         });
-
-        return filteredData;
     }
+
+    const filteredAndSortedProductsData = sortProductsData(filterProductsData(productsData));
 
     const contextValue = {
         filtersState,
-        filteredProductsData: filterData(productsData),
+        filteredAndSortedProductsData,
         toggleButtonFilter,
         handleSearcFilter,
         handleSelectFilter,

@@ -14,15 +14,24 @@ import styles from './ProductsList.module.css';
 const productCardsOnPage = 8;
 
 function ProductsList() {
-    const { filteredProductsData } = useFilterContext();
+    const { filteredAndSortedProductsData } = useFilterContext();
     const { isErrorFetchingProductsData, isLoadingProductsData } = useProductsDataContext();
     const [currentPage, setCurrentPage] = useState(1);
 
+    const isVisiblePagesButtons = !isErrorFetchingProductsData && !isLoadingProductsData && filteredAndSortedProductsData.length > 0;
+
     useEffect(() => {
         setCurrentPage(1);
-    }, [filteredProductsData]);
+    }, [filteredAndSortedProductsData]);
 
-    const qtyOfPages = Math.ceil(filteredProductsData.length / productCardsOnPage);
+    useEffect(() => {
+        window.scrollTo({
+            behavior: 'instant',
+            top: 0,
+        });
+    }, [currentPage]);
+
+    const qtyOfPages = Math.ceil(filteredAndSortedProductsData.length / productCardsOnPage);
 
     function createButtons() {
         const buttons = [];
@@ -82,18 +91,30 @@ function ProductsList() {
         return test;
     }
 
+    let productsListContent;
+
+    if (isLoadingProductsData) {
+        productsListContent = <p>Loading Products...</p>;
+    } else if (isErrorFetchingProductsData) {
+        productsListContent = <p>Ops... Some Problem</p>;
+    } else if (filteredAndSortedProductsData.length === 0 && !isErrorFetchingProductsData && !isLoadingProductsData) {
+        productsListContent = <p>No Items</p>;
+    }
+
     return (
         <>
             <SearchBar />
             <section className={styles.productsList}>
                 <div className="container">
                     <div className={styles.wrapper}>
-                        {isLoadingProductsData && <p>Loading Products...</p>}
-                        {isErrorFetchingProductsData && <p>Ops... Some Problem</p>}
-                        {filteredProductsData.length === 0 && !isErrorFetchingProductsData && !isLoadingProductsData && <p>No Items</p>}
-                        <Pagination currentPage={currentPage} data={filteredProductsData} productCardsOnPage={productCardsOnPage} />
+                        {productsListContent}
+                        <Pagination
+                            currentPage={currentPage}
+                            productsData={filteredAndSortedProductsData}
+                            productCardsOnPage={productCardsOnPage}
+                        />
                     </div>
-                    {!isErrorFetchingProductsData && !isLoadingProductsData && filteredProductsData.length > 0 && (
+                    {isVisiblePagesButtons && (
                         <div className={styles.pageButtonsWrapper}>
                             <button
                                 className={`${styles.pageButton} ${styles.sideButton}`}

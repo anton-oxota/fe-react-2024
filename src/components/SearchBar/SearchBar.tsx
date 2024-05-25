@@ -10,7 +10,12 @@ import FilterButton from '@/ui/FilterButton/FilterButton';
 
 import styles from './SearchBar.module.css';
 
-const selectors = [
+export interface Selector {
+    title: string;
+    selector: SortByEnum;
+}
+
+const selectors: Readonly<Selector[]> = [
     {
         title: 'Price (High - Low)',
         selector: SortByEnum.HIGH_TO_LOW,
@@ -84,5 +89,7 @@ function SearchBar() {
         </section>
     );
 }
+
+SearchBar.displayName = 'SearchBar';
 
 export { SearchBar };

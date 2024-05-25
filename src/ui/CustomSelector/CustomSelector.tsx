@@ -3,18 +3,13 @@ import React, { useState } from 'react';
 import ArrowDownIcon from '@assets/icons/Caret_Down_MD.svg?react';
 import ArrowUpIcon from '@assets/icons/Caret_Up_MD.svg?react';
 
+import type { Selector } from '@/components/SearchBar/SearchBar';
 import { useFilterContext } from '@/hooks/useFilterContext';
-import type { SortByEnum } from '@/interfaces/Filters';
 
 import styles from './CustomSelector.module.css';
 
-interface Selector {
-    title: string;
-    selector: SortByEnum;
-}
-
 interface CustomSelectorProps {
-    selectors: Selector[];
+    selectors: Readonly<Selector[]>;
     title: string;
 }
 
