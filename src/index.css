@@ -1,6 +1,8 @@
 :root {
   --font-family: "Montserrat", sans-serif;
   --main-red: #EF4934;
+  --static-grey-2: #656565;
+  --static-white: #FFF
 }
 
 :root[data-theme="light"] {
@@ -21,6 +23,7 @@
   --grey-2: #CCC;
   --grey-3: #333;
   --grey-4: #656565;
+  --grey-hover: #656565
 }
 
 html {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
 import LoginIcon from '@assets/icons/log_out.svg?react';
@@ -9,39 +9,21 @@ import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 import LightThemeIcon from '@assets/icons/sun.svg?react';
 import SingUpIcon from '@assets/icons/user_add.svg?react';
 
+import { useCartContext } from '@/hooks/useCartContext';
+import { useThemeContext } from '@/hooks/useThemeContext';
 import { PageName } from '@/interfaces/Pages';
-import type { Product } from '@/interfaces/Product';
 import { PageTheme } from '@/interfaces/Themes';
 
 import styles from './header.module.css';
 
-const htmlElement = document.querySelector('html');
-
 interface HeaderProps {
     onChangePage: (page: PageName) => void;
     activePage: PageName;
-    cartData: Array<Product>;
 }
 
-const isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
-
-function Header({ onChangePage, activePage, cartData }: HeaderProps) {
-    let initialThemeState: PageTheme;
-    const localTheme = localStorage.getItem('theme') as PageTheme | null;
-
-    if (localTheme) {
-        initialThemeState = localTheme;
-    } else {
-        initialThemeState = isLightTheme ? PageTheme.LIGHT : PageTheme.DARK;
-    }
-
-    const [theme, setTheme] = useState<PageTheme>(initialThemeState);
-    htmlElement!.dataset.theme = theme;
-
-    function handleChangeTheme(themeText: PageTheme) {
-        setTheme(themeText);
-        localStorage.setItem('theme', themeText);
-    }
+function Header({ onChangePage, activePage }: HeaderProps) {
+    const { cartData } = useCartContext();
+    const { theme, handleChangeTheme } = useThemeContext();
 
     return (
         <header className={styles.header}>

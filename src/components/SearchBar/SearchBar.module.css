@@ -32,8 +32,9 @@
 .actions {
   margin: 20px 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
 }
 
 @media (min-width: 1290px) {
