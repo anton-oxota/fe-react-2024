@@ -23,7 +23,8 @@
   --grey-2: #CCC;
   --grey-3: #333;
   --grey-4: #656565;
-  --grey-hover: #656565
+  --grey-hover: #656565;
+  --hover-red: #D43824;
 }
 
 html {
@@ -33,6 +34,16 @@ html {
 body {
   background-color: var(--white);
   color: var(--darkest-grey)
+}
+
+body > div {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+footer {
+  margin-top: auto;
 }
 
 * {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 
@@ -18,8 +19,19 @@ function ProductCard({ productData }: ProductCardProps) {
 
     const title = productData.title.length > 30 ? `${productData.title.slice(0, 30)}...` : productData.title;
 
+    const navigate = useNavigate();
+
+    function handleOpenProductPage() {
+        navigate(`${productData.id}`);
+    }
+
+    function handleBuyProduct(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        event.stopPropagation();
+        handleAddToCart(productData);
+    }
+
     return (
-        <div className={styles.productCard}>
+        <div onClick={handleOpenProductPage} className={styles.productCard}>
             <div className={styles.wrapper}>
                 <img className={styles.img} src={productData.images[0]} alt="" />
                 <h3 className={styles.title}>{title}</h3>
@@ -27,7 +39,7 @@ function ProductCard({ productData }: ProductCardProps) {
                     <div className={styles.price}>
                         {productData.price} <span>₴</span>
                     </div>
-                    <button className={`${styles.buy} ${headerStyles.cart}`} onClick={() => handleAddToCart(productData)}>
+                    <button className={`${styles.buy} ${headerStyles.cart}`} onClick={handleBuyProduct}>
                         {itemsQty.length > 0 && <span>{itemsQty.length}</span>}
                         <CartIcon />
                     </button>
