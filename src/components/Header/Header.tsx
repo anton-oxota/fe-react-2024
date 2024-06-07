@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useMatch } from 'react-router-dom';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
@@ -15,82 +15,91 @@ import { useCartContext } from '@/hooks/useCartContext';
 import { useThemeContext } from '@/hooks/useThemeContext';
 import { PageName } from '@/interfaces/Pages';
 import { PageTheme } from '@/interfaces/Themes';
+import { BurgerMenu } from '@/ui/BurgerMenu/BurgerMenu';
 
 import styles from './header.module.css';
 
 function Header() {
     const { cartData } = useCartContext();
     const { theme, handleChangeTheme } = useThemeContext();
+    const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
 
     const aboutMatchUrl = useMatch(ROOT_URL);
     const productsMatchUrl = useMatch(`${ROOT_URL}${PageName.PRODUCTS}`);
 
+    function handleToggleOpenBurgerMenu() {
+        setIsBurgerMenuOpen((previous) => !previous);
+    }
+
     return (
-        <header className={styles.header}>
-            <div className="container">
-                <div className={styles.wrapper}>
-                    <a href="/" className={styles.logo} title="Mastert Academy">
-                        <LogoIcon />
-                    </a>
+        <>
+            <header className={styles.header}>
+                <div className={`container `}>
+                    <div className={styles.wrapper}>
+                        <a href="/" className={styles.logo} title="Mastert Academy">
+                            <LogoIcon />
+                        </a>
 
-                    <div className={styles.theme}>
-                        <button
-                            className={`${styles.themeButton} ${theme === PageTheme.LIGHT ? styles.themeActive : ''}`}
-                            title="Light theme"
-                            onClick={() => handleChangeTheme(PageTheme.LIGHT)}
-                        >
-                            <LightThemeIcon />
-                        </button>
+                        <div className={styles.theme}>
+                            <button
+                                className={`${styles.themeButton} ${theme === PageTheme.LIGHT ? styles.themeActive : ''}`}
+                                title="Light theme"
+                                onClick={() => handleChangeTheme(PageTheme.LIGHT)}
+                            >
+                                <LightThemeIcon />
+                            </button>
 
-                        <ThemeDivider />
+                            <ThemeDivider />
 
-                        <button
-                            className={`${styles.themeButton} ${theme === PageTheme.DARK ? styles.themeActive : ''}`}
-                            title="Dark theme"
-                            onClick={() => handleChangeTheme(PageTheme.DARK)}
-                        >
-                            <DarkThemeIcon />
-                        </button>
-                    </div>
+                            <button
+                                className={`${styles.themeButton} ${theme === PageTheme.DARK ? styles.themeActive : ''}`}
+                                title="Dark theme"
+                                onClick={() => handleChangeTheme(PageTheme.DARK)}
+                            >
+                                <DarkThemeIcon />
+                            </button>
+                        </div>
 
-                    <nav className={styles.nav}>
-                        <ul className={styles.navWrapper}>
-                            <li>
-                                <NavLink to="" className={aboutMatchUrl ? styles.navLinkActive : styles.navLink}>
-                                    About
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to={PageName.PRODUCTS} className={productsMatchUrl ? styles.navLinkActive : styles.navLink}>
-                                    Products
-                                </NavLink>
-                            </li>
-                        </ul>
-                    </nav>
+                        <nav className={styles.nav}>
+                            <ul className={styles.navWrapper}>
+                                <li>
+                                    <NavLink to="" className={aboutMatchUrl ? styles.navLinkActive : styles.navLink}>
+                                        About
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to={PageName.PRODUCTS} className={productsMatchUrl ? styles.navLinkActive : styles.navLink}>
+                                        Products
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </nav>
 
-                    <div className={styles.actions}>
-                        <button className={styles.cart} title="Cart">
-                            {cartData.length > 0 && <span>{cartData.length}</span>}
-                            <CartIcon />
-                        </button>
+                        <div className={styles.actions}>
+                            <button className={styles.cart} title="Cart">
+                                {cartData.length > 0 && <span>{cartData.length}</span>}
+                                <CartIcon />
+                            </button>
 
-                        <button className={styles.menu} title="Menu">
-                            <MenuIcon />
-                        </button>
+                            <button className={styles.menu} title="Menu" onClick={handleToggleOpenBurgerMenu}>
+                                <MenuIcon />
+                            </button>
 
-                        <button className={styles.login} title="Login">
-                            <LoginIcon />
-                            Login
-                        </button>
+                            <button className={styles.login} title="Login">
+                                <LoginIcon />
+                                Login
+                            </button>
 
-                        <button className={styles.signUp} title="Sign">
-                            <SingUpIcon />
-                            Sign Up
-                        </button>
+                            <button className={styles.signUp} title="Sign">
+                                <SingUpIcon />
+                                Sign Up
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
+            </header>
+            <BurgerMenu isOpen={isBurgerMenuOpen} handleIsOpen={handleToggleOpenBurgerMenu} />
+        </>
     );
 }
 

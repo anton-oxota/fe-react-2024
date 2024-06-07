@@ -14,14 +14,20 @@ interface ProductSliderProps {
 function ProductSlider({ productImgs }: ProductSliderProps) {
     const [currentSlide, setCurrentSlide] = useState(0);
 
+    function handleSwitchSlide(slideIndex: number) {
+        if (slideIndex >= 0 && slideIndex < productImgs.length) {
+            setCurrentSlide(slideIndex);
+        }
+    }
+
     return (
         <div className={styles.slider}>
             <div className={styles.sliderItem}>
-                <button className="prev">
+                <button onClick={() => handleSwitchSlide(currentSlide - 1)} className="prev">
                     <PrevIcon />
                 </button>
                 <img className="slider-img" src={productImgs[currentSlide]} alt="" />
-                <button className="next">
+                <button onClick={() => handleSwitchSlide(currentSlide + 1)} className="next">
                     <NextIcon />
                 </button>
             </div>

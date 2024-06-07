@@ -1,6 +1,11 @@
 .header {
   padding: 15px 0;
   background-color: #111;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
 }
 
 .wrapper {
@@ -61,6 +66,10 @@
 
 
 @media (min-width: 1290px) {
+
+  .mobile {
+    display: none;
+  }
 
   .header {
     padding: 17px 0;
