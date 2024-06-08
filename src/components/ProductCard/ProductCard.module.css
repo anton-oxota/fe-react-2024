@@ -4,6 +4,12 @@
   padding: 20px 15px 15px;
   width: 275px;
   height: 344px;
+  cursor: pointer;
+  transition: .3s all;
+}
+
+.productCard:hover {
+  box-shadow: 5px 5px 5px 0 rgba(0,0,0,.2);
 }
 
 .wrapper {
@@ -53,9 +59,18 @@
 }
 
 .buy {
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+  right: 0;
+  transition: .3s all;
+}
+
+.buy:hover {
+  border: 1px solid var(--grey-3);
 }
 
 .buy > svg > path {

@@ -96,7 +96,7 @@ function ProductsList() {
     if (isLoadingProductsData) {
         productsListContent = <p>Loading Products...</p>;
     } else if (isErrorFetchingProductsData) {
-        productsListContent = <p>Ops... Some Problem</p>;
+        productsListContent = <p>{isErrorFetchingProductsData}</p>;
     } else if (filteredAndSortedProductsData.length === 0 && !isErrorFetchingProductsData && !isLoadingProductsData) {
         productsListContent = <p>No Items</p>;
     }
