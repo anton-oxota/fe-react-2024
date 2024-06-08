@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { NavLink, useMatch } from 'react-router-dom';
+import React from 'react';
+import { Link, NavLink, useMatch } from 'react-router-dom';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
 import LoginIcon from '@assets/icons/log_out.svg?react';
@@ -13,6 +13,7 @@ import SingUpIcon from '@assets/icons/user_add.svg?react';
 import { ROOT_URL } from '@/App';
 import { useCartContext } from '@/hooks/useCartContext';
 import { useThemeContext } from '@/hooks/useThemeContext';
+import { useToggle } from '@/hooks/useToggle';
 import { PageName } from '@/interfaces/Pages';
 import { PageTheme } from '@/interfaces/Themes';
 import { BurgerMenu } from '@/ui/BurgerMenu/BurgerMenu';
@@ -22,23 +23,19 @@ import styles from './header.module.css';
 function Header() {
     const { cartData } = useCartContext();
     const { theme, handleChangeTheme } = useThemeContext();
-    const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
+    const [isBurgerMenuOpen, handleToggleOpenBurgerMenu] = useToggle(false);
 
     const aboutMatchUrl = useMatch(ROOT_URL);
     const productsMatchUrl = useMatch(`${ROOT_URL}${PageName.PRODUCTS}`);
-
-    function handleToggleOpenBurgerMenu() {
-        setIsBurgerMenuOpen((previous) => !previous);
-    }
 
     return (
         <>
             <header className={styles.header}>
                 <div className={`container `}>
                     <div className={styles.wrapper}>
-                        <a href="/" className={styles.logo} title="Mastert Academy">
+                        <Link to={`/${ROOT_URL}`} className={styles.logo} title="Mastert Academy">
                             <LogoIcon />
-                        </a>
+                        </Link>
 
                         <div className={styles.theme}>
                             <button

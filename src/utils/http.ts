@@ -9,3 +9,13 @@ export async function fetchProduct(id: string): Promise<Product> {
 
     return await response.json();
 }
+
+export async function fetchProducts() {
+    const response = await fetch('https://ma-backend-api.mocintra.com/api/v1/products');
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch products');
+    }
+
+    return await response.json();
+}

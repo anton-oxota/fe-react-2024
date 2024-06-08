@@ -105,10 +105,14 @@
     display: block;
   }
 
+  .product {
+    padding-top: 135px;
+  }
+
   .wrapper {
     display: flex;
     gap: 75px;
-    border: 1px solid #CCC;
+    border: 1px solid var(--static-grey-3);
     border-radius: 40px;
     padding: 35px 75px;
     position: relative;

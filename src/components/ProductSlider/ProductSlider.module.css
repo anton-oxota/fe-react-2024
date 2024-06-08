@@ -75,15 +75,6 @@
     display: block;
   }
 
-  .wrapper {
-    display: flex;
-    gap: 75px;
-    border: 1px solid #CCC;
-    border-radius: 40px;
-    padding: 35px 75px;
-    position: relative;
-  }
-
   .productBack {
     position: absolute;
     top: 25px;

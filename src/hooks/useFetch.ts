@@ -13,8 +13,9 @@ function useFetch<I>(initialValue: I | null, fetchFunction: () => Promise<I>) {
                 setFetchedData(data);
             } catch (error_) {
                 setError((error_ as Error).message || 'Failed to fetch');
+            } finally {
+                setIsFetching(false);
             }
-            setIsFetching(false);
         }
 
         fetchPlace();
