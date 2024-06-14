@@ -4,7 +4,8 @@ import ArrowDownIcon from '@assets/icons/Caret_Down_MD.svg?react';
 import ArrowUpIcon from '@assets/icons/Caret_Up_MD.svg?react';
 
 import type { Selector } from '@/components/SearchBar/SearchBar';
-import { useFilterContext } from '@/hooks/useFilterContext';
+import { useFiltersContext } from '@/hooks/useFiltersContext';
+import { useToggle } from '@/hooks/useToggle';
 
 import styles from './CustomSelector.module.css';
 
@@ -14,28 +15,23 @@ interface CustomSelectorProps {
 }
 
 function CustomSelector({ selectors, title }: CustomSelectorProps) {
-    const {
-        filtersState: { sortBy },
-        handleSelectFilter,
-    } = useFilterContext();
-
-    const [currentSelector, setCurrentSelector] = useState(selectors.find((sel) => sel.selector === sortBy));
-    const [isOpen, setIsOpen] = useState(false);
+    const { handleSortBy } = useFiltersContext();
+    const [currentSelector, setCurrentSelector] = useState(selectors[0]);
+    const [isOpen, toogleIsOpen] = useToggle(false);
 
     const menuSelectors = selectors.filter((item) => item.selector !== currentSelector?.selector);
 
     function handleChangeCurrentSelector(selector: Selector['selector']) {
-        const newSelector = selectors.find((item) => item.selector === selector)!;
-        setCurrentSelector(newSelector);
-        handleSelectFilter(selector);
-        setIsOpen(false);
+        handleSortBy(selector);
+        setCurrentSelector(selectors.find((selectorItem) => selectorItem.selector === selector)!);
+        toogleIsOpen();
     }
 
     return (
         <div className={styles.selector}>
             <div className={styles.title}>{title}</div>
             <menu className={`${styles.selectorMenu} ${isOpen ? styles.open : ''}`}>
-                <button className={styles.selectorButton} onClick={() => setIsOpen((previous) => !previous)}>
+                <button className={styles.selectorButton} onClick={toogleIsOpen}>
                     {currentSelector?.title}
                     {isOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
                 </button>

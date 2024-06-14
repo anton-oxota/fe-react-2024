@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 
 import SearchIcon from '@assets/icons/search_glass.svg?react';
 
-import { useFilterContext } from '@/hooks/useFilterContext';
-import { useProductsDataContext } from '@/hooks/useProductsDataContext';
+import { useFiltersContext } from '@/hooks/useFiltersContext';
+import type { Category } from '@/interfaces/Category';
 import { SortByEnum } from '@/interfaces/Filters';
 import { CustomSelector } from '@/ui/CustomSelector/CustomSelector';
 import FilterButton from '@/ui/FilterButton/FilterButton';
@@ -24,38 +24,34 @@ const selectors: Readonly<Selector[]> = [
         title: 'Price (Low- High)',
         selector: SortByEnum.LOW_TO_HIGH,
     },
-    {
-        title: 'Newest',
-        selector: SortByEnum.NEWEST,
-    },
-    {
-        title: 'Oldest',
-        selector: SortByEnum.OLDEST,
-    },
+    // {
+    //     title: 'Newest',
+    //     selector: SortByEnum.NEWEST,
+    // },
+    // {
+    //     title: 'Oldest',
+    //     selector: SortByEnum.OLDEST,
+    // },
+];
+
+const filters: Readonly<Pick<Category, 'id' | 'name'>[]> = [
+    { id: 1, name: 'Clothes' },
+    { id: 2, name: 'Electronics' },
+    { id: 3, name: 'Furniture' },
+    { id: 4, name: 'Shoes' },
+    { id: 5, name: 'Miscellaneous' },
 ];
 
 function SearchBar() {
     const inputReference = useRef<HTMLInputElement>(null);
-    const { productsData } = useProductsDataContext();
-    const {
-        filtersState: { filters: activeFilters },
-        toggleButtonFilter,
-        handleSearcFilter,
-    } = useFilterContext();
 
-    const filtersArray: string[] = [];
+    const { handleChangeSerch, category, handleChangeActiveCategory } = useFiltersContext();
 
-    productsData.forEach((item) => {
-        if (!filtersArray.includes(item.category.name)) {
-            filtersArray.push(item.category.name);
-        }
-    });
-
-    function handleOnSubmit(event: React.FormEvent<HTMLFormElement>) {
+    function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
         if (inputReference.current) {
-            const inputValue = inputReference.current.value;
-            handleSearcFilter(inputValue);
+            handleChangeSerch(inputReference.current?.value);
         }
     }
 
@@ -63,7 +59,7 @@ function SearchBar() {
         <section className={styles.searchBar}>
             <div className="container">
                 <div className={styles.wrapper}>
-                    <form className={styles.form} onSubmit={handleOnSubmit}>
+                    <form className={styles.form} onSubmit={handleSearchSubmit} autoComplete="off">
                         <input ref={inputReference} type="text" name="search" placeholder="Search..." />
                         <button>
                             <SearchIcon />
@@ -71,14 +67,13 @@ function SearchBar() {
                     </form>
 
                     <div className={styles.actions}>
-                        {filtersArray.map((filter) => (
+                        {filters.map((filter) => (
                             <FilterButton
-                                key={filter}
-                                filter={filter}
-                                isActive={activeFilters.includes(filter)}
-                                onClick={() => toggleButtonFilter(filter)}
+                                key={filter.id}
+                                isActive={category === filter.id}
+                                onClick={() => handleChangeActiveCategory(filter.id)}
                             >
-                                {filter}
+                                {filter.name}
                             </FilterButton>
                         ))}
                     </div>

@@ -1,10 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import PrevIcon from '@assets/icons/Chevron_Left.svg?react';
 import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 
-import { ROOT_URL } from '@/App';
 import { ProductSlider } from '@/components/ProductSlider/ProductSlider';
 import { useCartContext } from '@/hooks/useCartContext';
 import { useFetch } from '@/hooks/useFetch';
@@ -19,9 +18,11 @@ function ProductPage() {
     const { productId } = useParams();
     const { handleAddToCart } = useCartContext();
 
-    const fetchProductFunction = useCallback(() => fetchProduct(productId!), [productId]);
+    const { fetchData, fetchedData, isFetching, error } = useFetch<Product>(null, fetchProduct);
 
-    const { fetchedData, isFetching, error } = useFetch<Product>(null, fetchProductFunction);
+    useEffect(() => {
+        fetchData(productId);
+    }, [productId, fetchData]);
 
     let content;
 
@@ -42,7 +43,7 @@ function ProductPage() {
                         <h2 className={`${styles.productPrice} ${styles.desctop}`}>
                             {fetchedData.price} <span>₴</span>
                         </h2>
-                        <Link to={`/${ROOT_URL}${PageName.PRODUCTS}`} className={`${styles.productBack} ${styles.mobile}`}>
+                        <Link to={`/${PageName.PRODUCTS}`} className={`${styles.productBack} ${styles.mobile}`}>
                             <PrevIcon />
                             Back
                         </Link>
@@ -52,7 +53,7 @@ function ProductPage() {
                         </button>
                     </div>
                 </div>
-                <Link to={`/${ROOT_URL}${PageName.PRODUCTS}`} className={`${styles.productBack} ${styles.desctop}`}>
+                <Link to={`/${PageName.PRODUCTS}`} className={`${styles.productBack} ${styles.desctop}`}>
                     <PrevIcon />
                     Back
                 </Link>

@@ -31,7 +31,7 @@ function ProductCard({ productData }: ProductCardProps) {
     }
 
     return (
-        <div onClick={handleOpenProductPage} className={styles.productCard}>
+        <div onClick={handleOpenProductPage} className={`${styles.productCard}`}>
             <div className={styles.wrapper}>
                 <img className={styles.img} src={productData.images[0]} alt="" />
                 <h3 className={styles.title}>{title}</h3>

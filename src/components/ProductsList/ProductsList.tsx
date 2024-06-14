@@ -3,35 +3,94 @@ import React, { useEffect, useState } from 'react';
 import PrevIcon from '@assets/icons/Chevron_Left.svg?react';
 import NextIcon from '@assets/icons/Chevron_Right.svg?react';
 
-import { useFilterContext } from '@/hooks/useFilterContext';
-import { useProductsDataContext } from '@/hooks/useProductsDataContext';
+import { useFetch } from '@/hooks/useFetch';
+import { useFiltersContext } from '@/hooks/useFiltersContext';
+import type { Product } from '@/interfaces/Product';
+import type { FetchProductsInterface } from '@/utils/http';
+import { fetchProducts } from '@/utils/http';
 
-import { Pagination } from '../Pagination/Pagination';
+import { ProductCard } from '../ProductCard/ProductCard';
 import { SearchBar } from '../SearchBar/SearchBar';
 
 import styles from './ProductsList.module.css';
 
+const productsInitialValue: FetchProductsInterface = { products: [], total: 0 };
+
 const productCardsOnPage = 8;
+const isMobile = window.innerWidth < 1290;
 
 function ProductsList() {
-    const { filteredAndSortedProductsData } = useFilterContext();
-    const { isErrorFetchingProductsData, isLoadingProductsData } = useProductsDataContext();
     const [currentPage, setCurrentPage] = useState(1);
+    const { search, sortBy, category } = useFiltersContext();
+    const { fetchData, fetchedData, isFetching, error } = useFetch(productsInitialValue, fetchProducts);
+    const qtyOfPages = Math.ceil((fetchedData ? fetchedData.total : 0) / productCardsOnPage);
 
-    const isVisiblePagesButtons = !isErrorFetchingProductsData && !isLoadingProductsData && filteredAndSortedProductsData.length > 0;
+    const [data, setData] = useState<Product[]>([]);
+
+    // test
+
+    useEffect(() => {
+        if (isMobile) {
+            if (currentPage === 1) {
+                if (fetchedData) {
+                    setData(fetchedData?.products);
+                }
+            } else {
+                if (fetchedData) {
+                    setData((previous) => [...previous, ...fetchedData.products]);
+                }
+            }
+        } else {
+            if (fetchedData) {
+                setData(fetchedData?.products);
+            }
+        }
+
+        return () => {};
+        // if remove 'currentPage' everything work fine bun i don't know how to do it
+    }, [fetchedData, currentPage]);
+
+    // First render
+    useEffect(() => {
+        fetchData(productCardsOnPage);
+    }, [fetchData]);
+
+    useEffect(() => {
+        if (!isMobile) {
+            setData([]);
+        }
+        fetchData(productCardsOnPage, (currentPage - 1) * productCardsOnPage, search, sortBy, category);
+    }, [fetchData, search, sortBy, category, currentPage]);
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [filteredAndSortedProductsData]);
+    }, [search, sortBy, category]);
+
+    // Window
+    const isVisiblePagesButtons = !isMobile && !isFetching && !error && data && data.length > 0;
 
     useEffect(() => {
-        window.scrollTo({
-            behavior: 'instant',
-            top: 0,
-        });
-    }, [currentPage]);
+        function handleScroll() {
+            if (document.documentElement.scrollHeight <= Math.ceil(window.innerHeight + window.scrollY)) {
+                setCurrentPage((previous) => {
+                    if (previous < qtyOfPages) {
+                        return previous + 1;
+                    }
+                    return previous;
+                });
+            }
+        }
 
-    const qtyOfPages = Math.ceil(filteredAndSortedProductsData.length / productCardsOnPage);
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [currentPage, qtyOfPages, isVisiblePagesButtons]);
+
+    function handleChangeButton(index: number) {
+        setCurrentPage(index);
+    }
 
     function createButtons() {
         const buttons = [];
@@ -40,7 +99,7 @@ function ProductsList() {
                 <button
                     className={`${styles.pageButton} ${currentPage === index ? styles.active : ''}`}
                     key={index}
-                    onClick={() => setCurrentPage(index)}
+                    onClick={() => handleChangeButton(index)}
                 >
                     {index}
                 </button>
@@ -91,13 +150,15 @@ function ProductsList() {
         return test;
     }
 
-    let productsListContent;
+    let productsListContent: React.ReactNode = data?.map((productData) => (
+        <ProductCard key={productData.title} productData={productData} />
+    ));
 
-    if (isLoadingProductsData) {
+    if (isFetching && !isMobile) {
         productsListContent = <p>Loading Products...</p>;
-    } else if (isErrorFetchingProductsData) {
-        productsListContent = <p>{isErrorFetchingProductsData}</p>;
-    } else if (filteredAndSortedProductsData.length === 0 && !isErrorFetchingProductsData && !isLoadingProductsData) {
+    } else if (error) {
+        productsListContent = <p>{error}</p>;
+    } else if (data?.length === 0 && !error && !isFetching) {
         productsListContent = <p>No Items</p>;
     }
 
@@ -107,12 +168,8 @@ function ProductsList() {
             <section className={styles.productsList}>
                 <div className="container">
                     <div className={styles.wrapper}>
+                        {isMobile && isFetching && data && data.length === 0 && <p>Loading Products...</p>}
                         {productsListContent}
-                        <Pagination
-                            currentPage={currentPage}
-                            productsData={filteredAndSortedProductsData}
-                            productCardsOnPage={productCardsOnPage}
-                        />
                     </div>
                     {isVisiblePagesButtons && (
                         <div className={styles.pageButtonsWrapper}>

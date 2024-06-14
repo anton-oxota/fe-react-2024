@@ -33,7 +33,7 @@ function Header() {
             <header className={styles.header}>
                 <div className={`container `}>
                     <div className={styles.wrapper}>
-                        <Link to={`/${ROOT_URL}`} className={styles.logo} title="Mastert Academy">
+                        <Link to={``} className={styles.logo} title="Mastert Academy">
                             <LogoIcon />
                         </Link>
 
