@@ -81,7 +81,9 @@ function ProductsList() {
             }
         }
 
-        window.addEventListener('scroll', handleScroll);
+        if (isMobile) {
+            window.addEventListener('scroll', handleScroll);
+        }
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
