@@ -30,36 +30,32 @@ function ProductsList() {
     // test
 
     useEffect(() => {
-        if (isMobile) {
-            if (currentPage === 1) {
-                if (fetchedData) {
-                    setData(fetchedData?.products);
-                }
+        if (fetchedData) {
+            if (isMobile && currentPage !== 1) {
+                setData((previous) => [...previous, ...fetchedData.products]);
             } else {
-                if (fetchedData) {
-                    setData((previous) => [...previous, ...fetchedData.products]);
-                }
-            }
-        } else {
-            if (fetchedData) {
-                setData(fetchedData?.products);
+                setData(fetchedData.products);
             }
         }
-
-        return () => {};
         // if remove 'currentPage' everything work fine bun i don't know how to do it
     }, [fetchedData, currentPage]);
 
     // First render
     useEffect(() => {
-        fetchData(productCardsOnPage);
+        fetchData({ limit: productCardsOnPage });
     }, [fetchData]);
 
     useEffect(() => {
         if (!isMobile) {
             setData([]);
         }
-        fetchData(productCardsOnPage, (currentPage - 1) * productCardsOnPage, search, sortBy, category);
+        fetchData({
+            limit: productCardsOnPage,
+            offset: (currentPage - 1) * productCardsOnPage,
+            title: search,
+            sortOrder: sortBy,
+            categoryId: category,
+        });
     }, [fetchData, search, sortBy, category, currentPage]);
 
     useEffect(() => {
@@ -164,13 +160,15 @@ function ProductsList() {
         productsListContent = <p>No Items</p>;
     }
 
+    const isLoadingMobile = isMobile && isFetching && data && data.length === 0;
+
     return (
         <>
             <SearchBar />
             <section className={styles.productsList}>
                 <div className="container">
                     <div className={styles.wrapper}>
-                        {isMobile && isFetching && data && data.length === 0 && <p>Loading Products...</p>}
+                        {isLoadingMobile && <p>Loading Products...</p>}
                         {productsListContent}
                     </div>
                     {isVisiblePagesButtons && (

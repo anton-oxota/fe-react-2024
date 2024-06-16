@@ -1,4 +1,4 @@
-import { SortByEnum } from '@/interfaces/Filters';
+import { SortBy } from '@/interfaces/Filters';
 import type { Product } from '@/interfaces/Product';
 
 export interface FetchProductsInterface {
@@ -18,13 +18,21 @@ export async function fetchProduct(id: string): Promise<Product> {
     return await response.json();
 }
 
-export async function fetchProducts(
-    limit: number = 0,
-    offset: number = 0,
-    title: string = '',
-    sortOrder: SortByEnum = SortByEnum.HIGH_TO_LOW,
-    categoryId: string = '',
-): Promise<FetchProductsInterface> {
+interface FetchProductsOptions {
+    limit?: number;
+    offset?: number;
+    title?: string;
+    sortOrder?: SortBy;
+    categoryId?: string;
+}
+
+export async function fetchProducts({
+    limit = 0,
+    offset = 0,
+    title = '',
+    categoryId = '',
+    sortOrder = SortBy.HIGH_TO_LOW,
+}: FetchProductsOptions): Promise<FetchProductsInterface> {
     const response = await fetch(
         `${BASE_URL}/products?limit=${limit}&offset=${offset}&title=${title}&categoryId=${categoryId}&sortOrder=${sortOrder}`,
     );

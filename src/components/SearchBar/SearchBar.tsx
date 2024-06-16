@@ -4,7 +4,7 @@ import SearchIcon from '@assets/icons/search_glass.svg?react';
 
 import { useFiltersContext } from '@/hooks/useFiltersContext';
 import type { Category } from '@/interfaces/Category';
-import { SortByEnum } from '@/interfaces/Filters';
+import { SortBy } from '@/interfaces/Filters';
 import { CustomSelector } from '@/ui/CustomSelector/CustomSelector';
 import FilterButton from '@/ui/FilterButton/FilterButton';
 
@@ -12,26 +12,18 @@ import styles from './SearchBar.module.css';
 
 export interface Selector {
     title: string;
-    selector: SortByEnum;
+    selector: SortBy;
 }
 
 const selectors: Readonly<Selector[]> = [
     {
         title: 'Price (High - Low)',
-        selector: SortByEnum.HIGH_TO_LOW,
+        selector: SortBy.HIGH_TO_LOW,
     },
     {
         title: 'Price (Low- High)',
-        selector: SortByEnum.LOW_TO_HIGH,
+        selector: SortBy.LOW_TO_HIGH,
     },
-    // {
-    //     title: 'Newest',
-    //     selector: SortByEnum.NEWEST,
-    // },
-    // {
-    //     title: 'Oldest',
-    //     selector: SortByEnum.OLDEST,
-    // },
 ];
 
 const filters: Readonly<Pick<Category, 'id' | 'name'>[]> = [

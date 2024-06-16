@@ -1,20 +1,20 @@
 import { createContext, useState } from 'react';
 
 import type { Category } from '@/interfaces/Category';
-import { SortByEnum } from '@/interfaces/Filters';
+import { SortBy } from '@/interfaces/Filters';
 
 interface FiltersContextInterface {
     search: string;
-    sortBy: SortByEnum;
+    sortBy: SortBy;
     category: '' | Category['id'];
     handleChangeSerch: (value: string) => void;
-    handleSortBy: (selector: SortByEnum) => void;
+    handleSortBy: (selector: SortBy) => void;
     handleChangeActiveCategory: (category: Category['id']) => void;
 }
 
 export const FiltersContext = createContext<FiltersContextInterface>({
     search: '',
-    sortBy: SortByEnum.HIGH_TO_LOW,
+    sortBy: SortBy.HIGH_TO_LOW,
     category: '',
     handleChangeSerch: () => {},
     handleSortBy: () => {},
@@ -27,14 +27,14 @@ interface FilterProviderProps {
 
 interface FilterState {
     search: string;
-    sortBy: SortByEnum;
+    sortBy: SortBy;
     category: '' | Category['id'];
 }
 
 function FiltersContextProvider({ children }: FilterProviderProps) {
     const [filters, setFilters] = useState<FilterState>({
         search: '',
-        sortBy: SortByEnum.HIGH_TO_LOW,
+        sortBy: SortBy.HIGH_TO_LOW,
         category: '',
     });
 
@@ -45,7 +45,7 @@ function FiltersContextProvider({ children }: FilterProviderProps) {
         }));
     }
 
-    function handleSortBy(selector: SortByEnum) {
+    function handleSortBy(selector: SortBy) {
         setFilters((previous) => ({ ...previous, sortBy: selector }));
     }
 
