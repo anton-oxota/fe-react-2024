@@ -93,7 +93,7 @@ function ProductsList() {
         productsListContent = <p>Loading...</p>;
     } else if (error && !isMobile) {
         productsListContent = <p>{error}</p>;
-    } else if (productsData.length === 0 && (search || category) && !isMobile) {
+    } else if (productsData.length === 0 && (search || category)) {
         productsListContent = <p>No Items</p>;
     }
 
