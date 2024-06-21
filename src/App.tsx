@@ -1,12 +1,11 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 
 import { AboutMe } from './components/AboutMe/AboutMe.tsx';
 import { ProductsList } from './components/ProductsList/ProductsList.tsx';
 import { CartContextProvider } from './context/Cart.context.tsx';
-import { FilterContextProvider } from './context/Filter.context.tsx';
-import { ProductsDataContextProvider } from './context/ProductData.context.tsx';
+import { FiltersContextProvider } from './context/Filters.context.tsx';
+import { ProductsContextProvider } from './context/Products.context.tsx';
 import { ThemeContextProvider } from './context/Theme.context.tsx';
-// import { PRODUCTS_DATA } from './data/data.ts';
 import { PageName } from './interfaces/Pages.ts';
 import { LayoutComponent } from './layouts/LayoutComponent.tsx';
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage.tsx';
@@ -18,13 +17,13 @@ export const ROOT_URL = 'fe-react-2024/';
 
 function App() {
     return (
-        <BrowserRouter>
-            <ProductsDataContextProvider>
-                <CartContextProvider>
-                    <FilterContextProvider>
+        <HashRouter>
+            <CartContextProvider>
+                <FiltersContextProvider>
+                    <ProductsContextProvider>
                         <ThemeContextProvider>
                             <Routes>
-                                <Route path={ROOT_URL} element={<LayoutComponent />}>
+                                <Route path="" element={<LayoutComponent />}>
                                     <Route index element={<AboutMe />} />
                                     <Route path={PageName.PRODUCTS} element={<ProductsList />} />
                                     <Route path={`${PageName.PRODUCTS}/:productId`} element={<ProductPage />} />
@@ -32,10 +31,10 @@ function App() {
                                 <Route path={`*`} element={<NotFoundPage />} />
                             </Routes>
                         </ThemeContextProvider>
-                    </FilterContextProvider>
-                </CartContextProvider>
-            </ProductsDataContextProvider>
-        </BrowserRouter>
+                    </ProductsContextProvider>
+                </FiltersContextProvider>
+            </CartContextProvider>
+        </HashRouter>
     );
 }
 
