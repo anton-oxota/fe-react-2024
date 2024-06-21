@@ -97,16 +97,20 @@ function ProductsList() {
         productsListContent = <p>No Items</p>;
     }
 
+    const isMobileFirstLoading = isMobile && !error && productsData.length === 0;
+    const isMobileLoading = isMobile && isFetching && productsData.length > 0;
+    const isMobileError = isMobile && error;
+
     return (
         <>
             <SearchBar />
             <section className={styles.productsList}>
                 <div className="container">
                     <div className={styles.wrapper}>
-                        {isMobile && productsData.length === 0 && <p>Loading...</p>}
+                        {isMobileFirstLoading && <p>Loading...</p>}
                         {productsListContent}
-                        {isMobile && isFetching && productsData.length > 0 && <p>Loading...</p>}
-                        {isMobile && error && <p>{error}</p>}
+                        {isMobileLoading && <p>Loading...</p>}
+                        {isMobileError && <p>{error}</p>}
                     </div>
                     {isVisiblePagesButtons && (
                         <Pagination

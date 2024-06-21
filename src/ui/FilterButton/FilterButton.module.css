@@ -8,10 +8,13 @@
   color: var(--darkest-grey);
 }
 
-.button:hover {
-  background-color: var(--hover-red);
-}
-
 .button.active {
   background-color: var(--main-red);
+}
+
+@media (min-width: 1290px) {
+
+  .button:hover {
+    background-color: var(--hover-red);
+  }
 }
