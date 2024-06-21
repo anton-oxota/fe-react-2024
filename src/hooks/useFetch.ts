@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-function useFetch<I>(initialValue: I | null, fetchFunction: (...a: any) => Promise<I>, isMobile: boolean = false) {
+function useFetch<I>(initialValue: I, fetchFunction: Function) {
     const [fetchedData, setFetchedData] = useState(initialValue);
     const [isFetching, setIsFetching] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -11,8 +11,11 @@ function useFetch<I>(initialValue: I | null, fetchFunction: (...a: any) => Promi
             setError(null);
             try {
                 const data = await fetchFunction(...a);
-                setFetchedData(data);
-            } catch (error_) {
+                setFetchedData((previous) => [...(previous as I[]), data] as I);
+            } catch (error_: any) {
+                if (error_.name === 'AbortError') {
+                    return;
+                }
                 setError((error_ as Error).message || 'Failed to fetch');
             } finally {
                 setIsFetching(false);
@@ -24,6 +27,7 @@ function useFetch<I>(initialValue: I | null, fetchFunction: (...a: any) => Promi
     return {
         fetchData,
         fetchedData,
+        setFetchedData,
         isFetching,
         error,
     };
