@@ -5,7 +5,6 @@ import ThemeDivider from '@assets/icons/h-divider.svg?react';
 import DarkThemeIcon from '@assets/icons/moon.svg?react';
 import LightThemeIcon from '@assets/icons/sun.svg?react';
 
-import { ROOT_URL } from '@/App';
 import { useThemeContext } from '@/hooks/useThemeContext';
 import { PageName } from '@/interfaces/Pages';
 import { PageTheme } from '@/interfaces/Themes';
@@ -20,8 +19,8 @@ interface BurgerMenuProps {
 function BurgerMenu({ isOpen, handleIsOpen }: BurgerMenuProps) {
     const { handleChangeTheme, theme } = useThemeContext();
 
-    const aboutUrlMatch = useMatch(ROOT_URL);
-    const productsUrlMatch = useMatch(`${ROOT_URL}${PageName.PRODUCTS}`);
+    const aboutUrlMatch = useMatch('');
+    const productsUrlMatch = useMatch(`${PageName.PRODUCTS}`);
 
     return (
         <div className={`${styles.burgerMenu} ${styles.mobile} ${isOpen ? styles.open : ''}`}>

@@ -18,36 +18,48 @@ function ProductPage() {
     const { productId } = useParams();
     const { handleAddToCart } = useCartContext();
 
-    const { fetchData, fetchedData, isFetching, error } = useFetch<Product>(null, fetchProduct);
+    const { fetchData, fetchedData, isFetching, error } = useFetch<Product[]>([], fetchProduct);
+
+    let productData;
+
+    if (fetchedData) {
+        productData = fetchedData[0];
+    }
 
     useEffect(() => {
-        fetchData(productId);
+        const controller = new AbortController();
+
+        fetchData(productId, controller.signal);
+
+        return () => {
+            controller.abort();
+        };
     }, [productId, fetchData]);
 
     let content;
 
     if (error) {
         content = <p>{error}</p>;
-    } else if (fetchedData) {
+    } else if (productData) {
         content = (
             <div className={styles.wrapper}>
-                <ProductSlider productImgs={fetchedData.images} />
+                <ProductSlider productImgs={productData.images} />
                 <div className={styles.productInfo}>
                     <h2 className={`${styles.productPrice} ${styles.mobile}`}>
-                        {fetchedData.price} <span>₴</span>
+                        {productData.price} <span>₴</span>
                     </h2>
-                    <h1 className={styles.productTitle}>{fetchedData.title}</h1>
-                    <div className={styles.productLabel}>{fetchedData.category.name}</div>
-                    <p className={styles.productInfoText}>{fetchedData.description}</p>
+                    <h1 className={styles.productTitle}>{productData.title}</h1>
+                    <div className={styles.productLabel}>{productData.category.name}</div>
+                    <p className={styles.productInfoText}>{productData.description}</p>
                     <div className={styles.productActions}>
                         <h2 className={`${styles.productPrice} ${styles.desctop}`}>
-                            {fetchedData.price} <span>₴</span>
+                            {productData.price} <span>₴</span>
                         </h2>
                         <Link to={`/${PageName.PRODUCTS}`} className={`${styles.productBack} ${styles.mobile}`}>
                             <PrevIcon />
                             Back
                         </Link>
-                        <button className={styles.productAddToCart} onClick={() => handleAddToCart(fetchedData)}>
+                        <button className={styles.productAddToCart} onClick={() => handleAddToCart(productData)}>
                             <CartIcon />
                             Add to cart
                         </button>

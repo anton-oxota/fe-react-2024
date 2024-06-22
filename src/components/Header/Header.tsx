@@ -10,7 +10,6 @@ import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 import LightThemeIcon from '@assets/icons/sun.svg?react';
 import SingUpIcon from '@assets/icons/user_add.svg?react';
 
-import { ROOT_URL } from '@/App';
 import { useCartContext } from '@/hooks/useCartContext';
 import { useThemeContext } from '@/hooks/useThemeContext';
 import { useToggle } from '@/hooks/useToggle';
@@ -25,8 +24,8 @@ function Header() {
     const { theme, handleChangeTheme } = useThemeContext();
     const [isBurgerMenuOpen, handleToggleOpenBurgerMenu] = useToggle(false);
 
-    const aboutMatchUrl = useMatch(ROOT_URL);
-    const productsMatchUrl = useMatch(`${ROOT_URL}${PageName.PRODUCTS}`);
+    const aboutMatchUrl = useMatch('');
+    const productsMatchUrl = useMatch(`${PageName.PRODUCTS}`);
 
     return (
         <>

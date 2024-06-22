@@ -11,9 +11,10 @@ import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
     productData: Product;
+    productRef: React.RefObject<HTMLDivElement> | null;
 }
 
-function ProductCard({ productData }: ProductCardProps) {
+function ProductCard({ productData, productRef }: ProductCardProps) {
     const { cartData, handleAddToCart } = useCartContext();
     const itemsQty = cartData.filter((item) => item.title === productData.title);
 
@@ -31,7 +32,7 @@ function ProductCard({ productData }: ProductCardProps) {
     }
 
     return (
-        <div onClick={handleOpenProductPage} className={`${styles.productCard}`}>
+        <div ref={productRef} onClick={handleOpenProductPage} className={`${styles.productCard}`}>
             <div className={styles.wrapper}>
                 <img className={styles.img} src={productData.images[0]} alt="" />
                 <h3 className={styles.title}>{title}</h3>

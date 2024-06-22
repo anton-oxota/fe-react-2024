@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from 'react';
-
-import PrevIcon from '@assets/icons/Chevron_Left.svg?react';
-import NextIcon from '@assets/icons/Chevron_Right.svg?react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { useFetch } from '@/hooks/useFetch';
 import { useFiltersContext } from '@/hooks/useFiltersContext';
@@ -9,158 +6,100 @@ import type { Product } from '@/interfaces/Product';
 import type { FetchProductsInterface } from '@/utils/http';
 import { fetchProducts } from '@/utils/http';
 
+import { Pagination } from '../Pagination/Pagination';
 import { ProductCard } from '../ProductCard/ProductCard';
 import { SearchBar } from '../SearchBar/SearchBar';
 
 import styles from './ProductsList.module.css';
 
-const productsInitialValue: FetchProductsInterface = { products: [], total: 0 };
+const productsInitialValue: FetchProductsInterface[] = [{ products: [], total: 0 }];
 
 const productCardsOnPage = 8;
 const isMobile = window.innerWidth < 1290;
 
 function ProductsList() {
-    const [currentPage, setCurrentPage] = useState(1);
     const { search, sortBy, category } = useFiltersContext();
-    const { fetchData, fetchedData, isFetching, error } = useFetch(productsInitialValue, fetchProducts);
-    const qtyOfPages = Math.ceil((fetchedData ? fetchedData.total : 0) / productCardsOnPage);
+    const { fetchData, fetchedData, setFetchedData, isFetching, error } = useFetch(productsInitialValue, fetchProducts);
+    const productsData = fetchedData?.reduce<Product[]>((previous, current) => [...previous, ...current.products], []);
 
-    const [data, setData] = useState<Product[]>([]);
-
-    // test
-
-    useEffect(() => {
-        if (fetchedData) {
-            if (isMobile && currentPage !== 1) {
-                setData((previous) => [...previous, ...fetchedData.products]);
-            } else {
-                setData(fetchedData.products);
-            }
-        }
-        // if remove 'currentPage' everything work fine bun i don't know how to do it
-    }, [fetchedData, currentPage]);
-
-    // First render
-    useEffect(() => {
-        fetchData({ limit: productCardsOnPage });
-    }, [fetchData]);
-
-    useEffect(() => {
-        if (!isMobile) {
-            setData([]);
-        }
-        fetchData({
-            limit: productCardsOnPage,
-            offset: (currentPage - 1) * productCardsOnPage,
-            title: search,
-            sortOrder: sortBy,
-            categoryId: category,
-        });
-    }, [fetchData, search, sortBy, category, currentPage]);
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [search, sortBy, category]);
-
-    // Window
-    const isVisiblePagesButtons = !isMobile && !isFetching && !error && data && data.length > 0;
-
-    useEffect(() => {
-        function handleScroll() {
-            if (document.documentElement.scrollHeight <= Math.ceil(window.innerHeight + window.scrollY)) {
-                setCurrentPage((previous) => {
-                    if (previous < qtyOfPages) {
-                        return previous + 1;
-                    }
-                    return previous;
-                });
-            }
-        }
-
-        if (isMobile) {
-            window.addEventListener('scroll', handleScroll);
-        }
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [currentPage, qtyOfPages, isVisiblePagesButtons]);
-
+    const [currentPage, setCurrentPage] = useState(1);
     function handleChangeButton(index: number) {
         setCurrentPage(index);
     }
+    const qtyOfPages = Math.ceil((fetchedData ? fetchedData[1]?.total : 0) / productCardsOnPage);
 
-    function createButtons() {
-        const buttons = [];
-        for (let index = 1; index <= qtyOfPages; index++) {
-            const button = (
-                <button
-                    className={`${styles.pageButton} ${currentPage === index ? styles.active : ''}`}
-                    key={index}
-                    onClick={() => handleChangeButton(index)}
-                >
-                    {index}
-                </button>
-            );
-            buttons.push(button);
-        }
-        return buttons;
-    }
+    const lastElement = useRef<HTMLDivElement>(null);
 
-    const pageButtons = createButtons();
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entryes) => {
+                if (entryes[0].isIntersecting) {
+                    setCurrentPage((previousPage) => {
+                        if (previousPage < qtyOfPages) {
+                            return previousPage + 1;
+                        }
 
-    function createPageButtons() {
-        let test;
-        if (currentPage <= 3) {
-            test = [
-                pageButtons[currentPage - 3],
-                pageButtons[currentPage - 2],
-                pageButtons[currentPage - 1],
-                pageButtons[currentPage],
-                <span key={Math.random()}>...</span>,
-                pageButtons[qtyOfPages - 1],
-            ];
+                        return previousPage;
+                    });
+                }
+            },
+            { threshold: 0.5 },
+        );
+
+        if (isMobile && lastElement.current) {
+            observer.observe(lastElement.current);
         }
 
-        if (currentPage >= qtyOfPages - 2) {
-            test = [
-                pageButtons[0],
-                <span key={Math.random()}>...</span>,
-                pageButtons[currentPage - 2],
-                pageButtons[currentPage - 1],
-                pageButtons[currentPage],
-                pageButtons[currentPage + 1],
-            ];
+        return () => {
+            observer.disconnect();
+        };
+    }, [fetchedData, qtyOfPages]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+        setFetchedData(productsInitialValue);
+    }, [search, category, sortBy, setFetchedData]);
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        if (!isMobile) {
+            setFetchedData(productsInitialValue);
         }
 
-        if (currentPage > 3 && currentPage < qtyOfPages - 2) {
-            test = [
-                pageButtons[0],
-                <span key={Math.random()}>...</span>,
-                pageButtons[currentPage - 2],
-                pageButtons[currentPage - 1],
-                pageButtons[currentPage],
-                <span key={Math.random()}>...</span>,
-                pageButtons[qtyOfPages - 1],
-            ];
-        }
+        fetchData(
+            {
+                limit: productCardsOnPage,
+                offset: (currentPage - 1) * productCardsOnPage,
+                title: search,
+                categoryId: category,
+                sortOrder: sortBy,
+            },
+            controller.signal,
+        );
 
-        return test;
-    }
+        return () => {
+            controller.abort();
+        };
+    }, [fetchData, search, category, sortBy, currentPage, setFetchedData]);
 
-    let productsListContent: React.ReactNode = data?.map((productData) => (
-        <ProductCard key={productData.title} productData={productData} />
+    const isVisiblePagesButtons = !isMobile && !isFetching && !error && productsData && productsData.length > 0;
+
+    let productsListContent: React.ReactNode = productsData?.map((productData) => (
+        <ProductCard key={productData.title} productRef={lastElement} productData={productData} />
     ));
 
     if (isFetching && !isMobile) {
-        productsListContent = <p>Loading Products...</p>;
-    } else if (error) {
+        productsListContent = <p>Loading...</p>;
+    } else if (error && !isMobile) {
         productsListContent = <p>{error}</p>;
-    } else if (data?.length === 0 && !error && !isFetching) {
+    } else if (fetchedData[1]?.total === 0 && (search || category)) {
         productsListContent = <p>No Items</p>;
     }
 
-    const isLoadingMobile = isMobile && isFetching && data && data.length === 0;
+    const isMobileFirstLoading = isMobile && !error && productsData.length === 0 && !fetchedData[1];
+    const isMobileLoading = isMobile && isFetching && productsData.length > 0;
+    const isMobileError = isMobile && error;
 
     return (
         <>
@@ -168,27 +107,18 @@ function ProductsList() {
             <section className={styles.productsList}>
                 <div className="container">
                     <div className={styles.wrapper}>
-                        {isLoadingMobile && <p>Loading Products...</p>}
+                        {isMobileFirstLoading && <p>Loading...</p>}
                         {productsListContent}
+                        {isMobileLoading && <p>Loading...</p>}
+                        {isMobileError && <p>{error}</p>}
                     </div>
                     {isVisiblePagesButtons && (
-                        <div className={styles.pageButtonsWrapper}>
-                            <button
-                                className={`${styles.pageButton} ${styles.sideButton}`}
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage((previous) => previous - 1)}
-                            >
-                                <PrevIcon />
-                            </button>
-                            {pageButtons.length > 5 ? createPageButtons() : pageButtons}
-                            <button
-                                className={`${styles.pageButton} ${styles.sideButton}`}
-                                disabled={currentPage === qtyOfPages}
-                                onClick={() => setCurrentPage((previous) => previous + 1)}
-                            >
-                                <NextIcon />
-                            </button>
-                        </div>
+                        <Pagination
+                            setCurrentPage={setCurrentPage}
+                            currentPage={currentPage}
+                            handleChangeButton={handleChangeButton}
+                            qtyOfPages={qtyOfPages}
+                        />
                     )}
                 </div>
             </section>
