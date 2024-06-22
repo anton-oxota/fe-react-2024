@@ -93,11 +93,11 @@ function ProductsList() {
         productsListContent = <p>Loading...</p>;
     } else if (error && !isMobile) {
         productsListContent = <p>{error}</p>;
-    } else if (productsData.length === 0 && (search || category)) {
+    } else if (fetchedData[1]?.total === 0 && (search || category)) {
         productsListContent = <p>No Items</p>;
     }
 
-    const isMobileFirstLoading = isMobile && !error && productsData.length === 0;
+    const isMobileFirstLoading = isMobile && !error && productsData.length === 0 && !fetchedData[1];
     const isMobileLoading = isMobile && isFetching && productsData.length > 0;
     const isMobileError = isMobile && error;
 
