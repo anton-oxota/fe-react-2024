@@ -1,13 +1,14 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useMatch } from 'react-router-dom';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
 import DarkThemeIcon from '@assets/icons/moon.svg?react';
 import LightThemeIcon from '@assets/icons/sun.svg?react';
 
-import { useThemeContext } from '@/hooks/useThemeContext';
 import { PageName } from '@/interfaces/Pages';
 import { PageTheme } from '@/interfaces/Themes';
+import { changeTheme, themeSelector } from '@/store/slices/themeSlice';
 
 import styles from './BurgerMenu.module.css';
 
@@ -17,7 +18,12 @@ interface BurgerMenuProps {
 }
 
 function BurgerMenu({ isOpen, handleIsOpen }: BurgerMenuProps) {
-    const { handleChangeTheme, theme } = useThemeContext();
+    const dispatch = useDispatch();
+    const theme = useSelector(themeSelector);
+
+    function handleChangeTheme(newTheme: PageTheme) {
+        dispatch(changeTheme(newTheme));
+    }
 
     const aboutUrlMatch = useMatch('');
     const productsUrlMatch = useMatch(`${PageName.PRODUCTS}`);

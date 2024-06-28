@@ -2,9 +2,10 @@ import React, { useRef } from 'react';
 
 import SearchIcon from '@assets/icons/search_glass.svg?react';
 
-import { useFiltersContext } from '@/hooks/useFiltersContext';
+import { useReduxStore } from '@/hooks/useReduxStore';
 import type { Category } from '@/interfaces/Category';
 import { SortBy } from '@/interfaces/Filters';
+import { categorySelector, changeActiveCategory, changeSearch } from '@/store/slices/filtersSlice';
 import { CustomSelector } from '@/ui/CustomSelector/CustomSelector';
 import FilterButton from '@/ui/FilterButton/FilterButton';
 
@@ -35,15 +36,25 @@ const filters: Readonly<Pick<Category, 'id' | 'name'>[]> = [
 ];
 
 function SearchBar() {
+    const { useAppDispatch, useAppSelector } = useReduxStore();
+    const dispatch = useAppDispatch();
     const inputReference = useRef<HTMLInputElement>(null);
 
-    const { handleChangeSerch, category, handleChangeActiveCategory } = useFiltersContext();
+    const category = useAppSelector(categorySelector);
+
+    function handleChangeSearch(value: string) {
+        dispatch(changeSearch(value));
+    }
+
+    function handleChangeActiveCategory(newCategory: Category['id']) {
+        dispatch(changeActiveCategory(newCategory));
+    }
 
     function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (inputReference.current) {
-            handleChangeSerch(inputReference.current?.value);
+            handleChangeSearch(inputReference.current?.value);
         }
     }
 

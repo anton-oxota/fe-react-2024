@@ -1,14 +1,9 @@
 import { SortBy } from '@/interfaces/Filters';
 import type { Product } from '@/interfaces/Product';
 
-export interface FetchProductsInterface {
-    products: Product[];
-    total: number;
-}
-
 const BASE_URL = 'https://ma-backend-api.mocintra.com/api/v1';
 
-export async function fetchProduct(id: string, signal: AbortController['signal']): Promise<Product> {
+export async function fetchProduct(id: Product['id'], signal: AbortController['signal']): Promise<Product> {
     const response = await fetch(`${BASE_URL}/products/${id}`, { signal });
 
     if (!response.ok) {
@@ -18,12 +13,17 @@ export async function fetchProduct(id: string, signal: AbortController['signal']
     return await response.json();
 }
 
-interface FetchProductsOptions {
+export interface FetchProductsOptions {
     limit?: number;
     offset?: number;
     title?: string;
     sortOrder?: SortBy;
-    categoryId?: string;
+    categoryId?: number | string;
+}
+
+export interface FetchProductsInterface {
+    products: Product[];
+    total: number;
 }
 
 export async function fetchProducts(

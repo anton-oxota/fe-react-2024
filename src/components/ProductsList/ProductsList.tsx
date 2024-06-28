@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { useFetch } from '@/hooks/useFetch';
-import { useFiltersContext } from '@/hooks/useFiltersContext';
+import { useReduxStore } from '@/hooks/useReduxStore';
 import type { Product } from '@/interfaces/Product';
-import type { FetchProductsInterface } from '@/utils/http';
-import { fetchProducts } from '@/utils/http';
+import { categorySelector, searchSelector, sortBySelector } from '@/store/slices/filtersSlice';
+import { dataSelector, errorSelector, getProducts, isLoadingSelector, resetData } from '@/store/slices/productsSlise';
 
 import { Pagination } from '../Pagination/Pagination';
 import { ProductCard } from '../ProductCard/ProductCard';
@@ -12,24 +11,33 @@ import { SearchBar } from '../SearchBar/SearchBar';
 
 import styles from './ProductsList.module.css';
 
-const productsInitialValue: FetchProductsInterface[] = [{ products: [], total: 0 }];
-
 const productCardsOnPage = 8;
 const isMobile = window.innerWidth < 1290;
 
 function ProductsList() {
-    const { search, sortBy, category } = useFiltersContext();
-    const { fetchData, fetchedData, setFetchedData, isFetching, error } = useFetch(productsInitialValue, fetchProducts);
-    const productsData = fetchedData?.reduce<Product[]>((previous, current) => [...previous, ...current.products], []);
+    const { useAppDispatch, useAppSelector } = useReduxStore();
+    const dispatch = useAppDispatch();
+
+    const search = useAppSelector(searchSelector);
+    const sortBy = useAppSelector(sortBySelector);
+    const category = useAppSelector(categorySelector);
+
+    const fetchedData = useAppSelector(dataSelector);
+    const isFetching = useAppSelector(isLoadingSelector);
+    const error = useAppSelector(errorSelector);
 
     const [currentPage, setCurrentPage] = useState(1);
     function handleChangeButton(index: number) {
         setCurrentPage(index);
     }
-    const qtyOfPages = Math.ceil((fetchedData ? fetchedData[1]?.total : 0) / productCardsOnPage);
+    const productsData = fetchedData?.reduce<Product[]>((previous, current) => [...previous, ...current.products], []);
+    const totalOfProducts = fetchedData[1]?.total;
+    const qtyOfPages = Math.ceil((fetchedData ? totalOfProducts : 0) / productCardsOnPage);
 
     const lastElement = useRef<HTMLDivElement>(null);
 
+    // Infinite Scroll
+    // IntersectionObserver
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entryes) => {
@@ -57,31 +65,31 @@ function ProductsList() {
 
     useEffect(() => {
         setCurrentPage(1);
-        setFetchedData(productsInitialValue);
-    }, [search, category, sortBy, setFetchedData]);
+        dispatch(resetData());
+    }, [search, category, sortBy, dispatch]);
 
     useEffect(() => {
         const controller = new AbortController();
 
         if (!isMobile) {
-            setFetchedData(productsInitialValue);
+            dispatch(resetData());
         }
 
-        fetchData(
-            {
+        dispatch(
+            getProducts({
                 limit: productCardsOnPage,
                 offset: (currentPage - 1) * productCardsOnPage,
                 title: search,
                 categoryId: category,
                 sortOrder: sortBy,
-            },
-            controller.signal,
+                signal: controller.signal,
+            }),
         );
 
         return () => {
             controller.abort();
         };
-    }, [fetchData, search, category, sortBy, currentPage, setFetchedData]);
+    }, [search, category, sortBy, currentPage, dispatch]);
 
     const isVisiblePagesButtons = !isMobile && !isFetching && !error && productsData && productsData.length > 0;
 
@@ -93,7 +101,7 @@ function ProductsList() {
         productsListContent = <p>Loading...</p>;
     } else if (error && !isMobile) {
         productsListContent = <p>{error}</p>;
-    } else if (fetchedData[1]?.total === 0 && (search || category)) {
+    } else if (totalOfProducts === 0 && (search || category)) {
         productsListContent = <p>No Items</p>;
     }
 
@@ -106,6 +114,8 @@ function ProductsList() {
             <SearchBar />
             <section className={styles.productsList}>
                 <div className="container">
+                    <p>Total amount of products: {totalOfProducts}</p>
+                    {(search || category) && <p>Filtered amount of products: {totalOfProducts}</p>}
                     <div className={styles.wrapper}>
                         {isMobileFirstLoading && <p>Loading...</p>}
                         {productsListContent}

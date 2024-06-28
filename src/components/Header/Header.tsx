@@ -10,22 +10,32 @@ import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 import LightThemeIcon from '@assets/icons/sun.svg?react';
 import SingUpIcon from '@assets/icons/user_add.svg?react';
 
-import { useCartContext } from '@/hooks/useCartContext';
-import { useThemeContext } from '@/hooks/useThemeContext';
+import { useReduxStore } from '@/hooks/useReduxStore';
 import { useToggle } from '@/hooks/useToggle';
 import { PageName } from '@/interfaces/Pages';
 import { PageTheme } from '@/interfaces/Themes';
+import { cartSelector } from '@/store/slices/cartSlice';
+import { changeTheme, themeSelector } from '@/store/slices/themeSlice';
 import { BurgerMenu } from '@/ui/BurgerMenu/BurgerMenu';
 
 import styles from './header.module.css';
 
 function Header() {
-    const { cartData } = useCartContext();
-    const { theme, handleChangeTheme } = useThemeContext();
+    const { useAppDispatch, useAppSelector } = useReduxStore();
+    const dispatch = useAppDispatch();
+    const theme = useAppSelector(themeSelector);
+    const cartData = useAppSelector(cartSelector);
+
+    const totalCartQty = cartData.reduce((accumulator, current) => accumulator + current.quantity, 0);
+
     const [isBurgerMenuOpen, handleToggleOpenBurgerMenu] = useToggle(false);
 
     const aboutMatchUrl = useMatch('');
     const productsMatchUrl = useMatch(`${PageName.PRODUCTS}`);
+
+    function handleChangeTheme(newTheme: PageTheme) {
+        dispatch(changeTheme(newTheme));
+    }
 
     return (
         <>
@@ -73,7 +83,7 @@ function Header() {
 
                         <div className={styles.actions}>
                             <button className={styles.cart} title="Cart">
-                                {cartData.length > 0 && <span>{cartData.length}</span>}
+                                {cartData.length > 0 && <span>{totalCartQty}</span>}
                                 <CartIcon />
                             </button>
 

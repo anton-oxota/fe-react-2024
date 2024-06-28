@@ -4,8 +4,10 @@ import ArrowDownIcon from '@assets/icons/Caret_Down_MD.svg?react';
 import ArrowUpIcon from '@assets/icons/Caret_Up_MD.svg?react';
 
 import type { Selector } from '@/components/SearchBar/SearchBar';
-import { useFiltersContext } from '@/hooks/useFiltersContext';
+import { useReduxStore } from '@/hooks/useReduxStore';
 import { useToggle } from '@/hooks/useToggle';
+import type { SortBy } from '@/interfaces/Filters';
+import { changeSortBy } from '@/store/slices/filtersSlice';
 
 import styles from './CustomSelector.module.css';
 
@@ -15,11 +17,17 @@ interface CustomSelectorProps {
 }
 
 function CustomSelector({ selectors, title }: CustomSelectorProps) {
-    const { handleSortBy } = useFiltersContext();
+    const { useAppDispatch } = useReduxStore();
+    const dispatch = useAppDispatch();
+
     const [currentSelector, setCurrentSelector] = useState(selectors[0]);
     const [isOpen, toogleIsOpen] = useToggle(false);
 
     const menuSelectors = selectors.filter((item) => item.selector !== currentSelector?.selector);
+
+    function handleSortBy(sortBy: SortBy) {
+        dispatch(changeSortBy(sortBy));
+    }
 
     function handleChangeCurrentSelector(selector: Selector['selector']) {
         handleSortBy(selector);
