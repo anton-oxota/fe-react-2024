@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 
-import { useCartContext } from '@/hooks/useCartContext';
+import { useReduxStore } from '@/hooks/useReduxStore';
 import type { Product } from '@/interfaces/Product';
+import { addToCart, cartSelector } from '@/store/slices/cartSlice';
 
 import headerStyles from '../../components/Header/header.module.css';
 import styles from './ProductCard.module.css';
@@ -15,8 +16,11 @@ interface ProductCardProps {
 }
 
 function ProductCard({ productData, productRef }: ProductCardProps) {
-    const { cartData, handleAddToCart } = useCartContext();
-    const itemsQty = cartData.filter((item) => item.title === productData.title);
+    const { useAppDispatch, useAppSelector } = useReduxStore();
+    const dispatch = useAppDispatch();
+    const cartData = useAppSelector(cartSelector);
+
+    const itemQty = cartData.find((cartItem) => cartItem.id === productData.id)?.quantity || 0;
 
     const title = productData.title.length > 30 ? `${productData.title.slice(0, 30)}...` : productData.title;
 
@@ -28,7 +32,7 @@ function ProductCard({ productData, productRef }: ProductCardProps) {
 
     function handleBuyProduct(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         event.stopPropagation();
-        handleAddToCart(productData);
+        dispatch(addToCart(productData));
     }
 
     return (
@@ -41,7 +45,7 @@ function ProductCard({ productData, productRef }: ProductCardProps) {
                         {productData.price} <span>₴</span>
                     </div>
                     <button className={`${styles.buy} ${headerStyles.cart}`} onClick={handleBuyProduct}>
-                        {itemsQty.length > 0 && <span>{itemsQty.length}</span>}
+                        {itemQty > 0 && <span>{itemQty}</span>}
                         <CartIcon />
                     </button>
                 </div>
