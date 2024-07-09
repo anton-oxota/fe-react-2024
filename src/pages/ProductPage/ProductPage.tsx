@@ -5,36 +5,38 @@ import PrevIcon from '@assets/icons/Chevron_Left.svg?react';
 import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 
 import { ProductSlider } from '@/components/ProductSlider/ProductSlider';
-import { useCartContext } from '@/hooks/useCartContext';
-import { useFetch } from '@/hooks/useFetch';
+import { useReduxStore } from '@/hooks/useReduxStore';
 import { PageName } from '@/interfaces/Pages';
-import type { Product } from '@/interfaces/Product';
-
-import { fetchProduct } from '../../utils/http';
+import { addToCart } from '@/store/slices/cartSlice';
+import { errorSelector, getProductById, isLoadingSelector, productDataSelector, resetData } from '@/store/slices/productSlice';
 
 import styles from './ProductPage.module.css';
 
 function ProductPage() {
+    const { useAppDispatch, useAppSelector } = useReduxStore();
+    const dispatch = useAppDispatch();
     const { productId } = useParams();
-    const { handleAddToCart } = useCartContext();
 
-    const { fetchData, fetchedData, isFetching, error } = useFetch<Product[]>([], fetchProduct);
-
-    let productData;
-
-    if (fetchedData) {
-        productData = fetchedData[0];
-    }
+    const productData = useAppSelector(productDataSelector);
+    const isFetching = useAppSelector(isLoadingSelector);
+    const error = useAppSelector(errorSelector);
 
     useEffect(() => {
         const controller = new AbortController();
 
-        fetchData(productId, controller.signal);
+        dispatch(getProductById({ id: +productId!, signal: controller.signal }));
 
         return () => {
             controller.abort();
+            dispatch(resetData());
         };
-    }, [productId, fetchData]);
+    }, [productId, dispatch]);
+
+    function handleAddToCart() {
+        if (productData) {
+            dispatch(addToCart(productData));
+        }
+    }
 
     let content;
 
@@ -59,7 +61,7 @@ function ProductPage() {
                             <PrevIcon />
                             Back
                         </Link>
-                        <button className={styles.productAddToCart} onClick={() => handleAddToCart(productData)}>
+                        <button className={styles.productAddToCart} onClick={handleAddToCart}>
                             <CartIcon />
                             Add to cart
                         </button>
