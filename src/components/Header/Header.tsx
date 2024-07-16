@@ -47,6 +47,10 @@ function Header() {
     const { verify } = useVerify();
 
     function handleCartButton() {
+        if (isBurgerMenuOpen) {
+            handleToggleOpenBurgerMenu();
+        }
+
         (async () => {
             const isVerify = await verify();
 
@@ -63,7 +67,12 @@ function Header() {
             <header className={styles.header}>
                 <div className={`container `}>
                     <div className={styles.wrapper}>
-                        <Link to={``} className={styles.logo} title="Mastert Academy">
+                        <Link
+                            to={``}
+                            className={styles.logo}
+                            title="Mastert Academy"
+                            onClick={isBurgerMenuOpen ? handleToggleOpenBurgerMenu : undefined}
+                        >
                             <LogoIcon />
                         </Link>
 

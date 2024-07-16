@@ -16,7 +16,7 @@ function CartPage() {
                 navigate(`/${PageName.LOGIN}`);
             }
         })();
-    });
+    }, [navigate, verify]);
     return (
         <section className={styles.cart}>
             <div className="container">
