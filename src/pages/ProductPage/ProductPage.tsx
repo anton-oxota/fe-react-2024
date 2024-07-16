@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import PrevIcon from '@assets/icons/Chevron_Left.svg?react';
 import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 
 import { ProductSlider } from '@/components/ProductSlider/ProductSlider';
 import { useReduxStore } from '@/hooks/useReduxStore';
+import { useVerify } from '@/hooks/useVerify';
 import { PageName } from '@/interfaces/Pages';
 import { addToCart } from '@/store/slices/cartSlice';
 import { errorSelector, getProductById, isLoadingSelector, productDataSelector, resetData } from '@/store/slices/productSlice';
@@ -13,14 +14,15 @@ import { errorSelector, getProductById, isLoadingSelector, productDataSelector, 
 import styles from './ProductPage.module.css';
 
 function ProductPage() {
+    const navigate = useNavigate();
     const { useAppDispatch, useAppSelector } = useReduxStore();
     const dispatch = useAppDispatch();
     const { productId } = useParams();
+    const { isLoading, verify } = useVerify();
 
     const productData = useAppSelector(productDataSelector);
     const isFetching = useAppSelector(isLoadingSelector);
     const error = useAppSelector(errorSelector);
-
     useEffect(() => {
         const controller = new AbortController();
 
@@ -33,9 +35,13 @@ function ProductPage() {
     }, [productId, dispatch]);
 
     function handleAddToCart() {
-        if (productData) {
-            dispatch(addToCart(productData));
-        }
+        (async () => {
+            if (productData && (await verify())) {
+                dispatch(addToCart(productData));
+            } else {
+                navigate(`/${PageName.LOGIN}`);
+            }
+        })();
     }
 
     let content;
@@ -61,7 +67,7 @@ function ProductPage() {
                             <PrevIcon />
                             Back
                         </Link>
-                        <button className={styles.productAddToCart} onClick={handleAddToCart}>
+                        <button className={styles.productAddToCart} onClick={handleAddToCart} disabled={isLoading}>
                             <CartIcon />
                             Add to cart
                         </button>

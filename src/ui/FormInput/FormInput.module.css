@@ -1,0 +1,32 @@
+.input {
+  border: 1px solid var(--grey-4, #E1E1E1);
+  border-radius: 50px;
+  padding: 10px 20px;
+  width: 100%;
+  height: 45px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--grey-2, #656565);
+  background-color: transparent !important;
+}
+
+.input.error {
+  border: 1px solid #F00;
+}
+
+.input::placeholder {
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--grey-2, #656565);
+}
+
+.input:focus {
+  outline: none;
+  background-color: var(--grey-hover, #F1F1F1) !important;
+}
+
+.message {
+  font-family: var(--font-family);
+  color: #F00
+}

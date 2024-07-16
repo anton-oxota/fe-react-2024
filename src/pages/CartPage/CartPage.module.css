@@ -1,0 +1,12 @@
+.cart {
+  padding-top: 70px;
+  padding-bottom: 60px;
+}
+
+@media (min-width: 1290px) {
+
+  .cart {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+}

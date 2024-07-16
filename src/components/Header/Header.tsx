@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink, useMatch } from 'react-router-dom';
+import { Link, NavLink, useMatch, useNavigate } from 'react-router-dom';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
 import LoginIcon from '@assets/icons/log_out.svg?react';
@@ -12,19 +12,24 @@ import SingUpIcon from '@assets/icons/user_add.svg?react';
 
 import { useReduxStore } from '@/hooks/useReduxStore';
 import { useToggle } from '@/hooks/useToggle';
+import { useVerify } from '@/hooks/useVerify';
 import { PageName } from '@/interfaces/Pages';
 import { PageTheme } from '@/interfaces/Themes';
 import { cartSelector } from '@/store/slices/cartSlice';
 import { changeTheme, themeSelector } from '@/store/slices/themeSlice';
 import { BurgerMenu } from '@/ui/BurgerMenu/BurgerMenu';
+import { getAccessToken, logout } from '@/utils/token';
 
 import styles from './header.module.css';
 
 function Header() {
+    const navigate = useNavigate();
     const { useAppDispatch, useAppSelector } = useReduxStore();
     const dispatch = useAppDispatch();
     const theme = useAppSelector(themeSelector);
     const cartData = useAppSelector(cartSelector);
+
+    const accessToken = getAccessToken();
 
     const totalCartQty = cartData.reduce((accumulator, current) => accumulator + current.quantity, 0);
 
@@ -35,6 +40,22 @@ function Header() {
 
     function handleChangeTheme(newTheme: PageTheme) {
         dispatch(changeTheme(newTheme));
+    }
+
+    const isLogin = !!getAccessToken();
+
+    const { verify } = useVerify();
+
+    function handleCartButton() {
+        (async () => {
+            const isVerify = await verify();
+
+            if (isVerify) {
+                navigate(PageName.CART);
+            } else {
+                navigate(PageName.LOGIN);
+            }
+        })();
     }
 
     return (
@@ -82,8 +103,8 @@ function Header() {
                         </nav>
 
                         <div className={styles.actions}>
-                            <button className={styles.cart} title="Cart">
-                                {cartData.length > 0 && <span>{totalCartQty}</span>}
+                            <button className={styles.cart} title="Cart" onClick={handleCartButton}>
+                                {cartData.length > 0 && isLogin && <span>{totalCartQty}</span>}
                                 <CartIcon />
                             </button>
 
@@ -91,15 +112,35 @@ function Header() {
                                 <MenuIcon />
                             </button>
 
-                            <button className={styles.login} title="Login">
-                                <LoginIcon />
-                                Login
-                            </button>
+                            {accessToken ? (
+                                <>
+                                    <Link to={''} className={styles.actionButton} onClick={logout}>
+                                        <LoginIcon />
+                                        Log out
+                                    </Link>
+                                    <button className={styles.actionButton} title="Sign" disabled={isLogin}>
+                                        <SingUpIcon />
+                                        Sign Up
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        to={PageName.LOGIN}
+                                        className={styles.actionButton}
+                                        title="Login"
+                                        onClick={handleToggleOpenBurgerMenu}
+                                    >
+                                        <LoginIcon />
+                                        Login
+                                    </Link>
 
-                            <button className={styles.signUp} title="Sign">
-                                <SingUpIcon />
-                                Sign Up
-                            </button>
+                                    <button className={`${styles.actionButton} ${styles.active}`} title="Sign">
+                                        <SingUpIcon />
+                                        Sign Up
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,38 @@
+.formButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 40px;
+  padding: 5px 10px;
+  width: 100%;
+  height: 45px;
+  background: var(--grey-hover, #F1F1F1);
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--darkest-grey, #111);
+}
+
+.formButton path {
+  stroke: var(--darkest-grey, #111)
+}
+
+.formButton:disabled {
+  border: 1px solid var(--grey-3, #CCC);
+  background-color: transparent;
+  color: var(--grey-3, #CCC);
+}
+
+.formButton:disabled path {
+  stroke: var(--grey-3, #CCC);
+}
+
+.formButton.active {
+  background: var(--main-red, #EF4934);
+  color: var(--static-white, #FFF);
+}
+
+.formButton.active path {
+  stroke: var(--static-white, #FFF);
+}
