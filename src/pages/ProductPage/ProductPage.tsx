@@ -8,21 +8,27 @@ import { ProductSlider } from '@/components/ProductSlider/ProductSlider';
 import { useReduxStore } from '@/hooks/useReduxStore';
 import { useVerify } from '@/hooks/useVerify';
 import { PageName } from '@/interfaces/Pages';
-import { addToCart } from '@/store/slices/cartSlice';
+import { addToCart, cartSelector } from '@/store/slices/cartSlice';
 import { errorSelector, getProductById, isLoadingSelector, productDataSelector, resetData } from '@/store/slices/productSlice';
 
 import styles from './ProductPage.module.css';
 
 function ProductPage() {
     const navigate = useNavigate();
+
     const { useAppDispatch, useAppSelector } = useReduxStore();
     const dispatch = useAppDispatch();
+
     const { productId } = useParams();
     const { isLoading, verify } = useVerify();
 
+    const productsCart = useAppSelector(cartSelector);
     const productData = useAppSelector(productDataSelector);
     const isFetching = useAppSelector(isLoadingSelector);
     const error = useAppSelector(errorSelector);
+
+    const isProductInCart = productsCart.some((product) => product.id === +productId!);
+
     useEffect(() => {
         const controller = new AbortController();
 
@@ -67,7 +73,7 @@ function ProductPage() {
                             <PrevIcon />
                             Back
                         </Link>
-                        <button className={styles.productAddToCart} onClick={handleAddToCart} disabled={isLoading}>
+                        <button className={styles.productAddToCart} onClick={handleAddToCart} disabled={isLoading || isProductInCart}>
                             <CartIcon />
                             Add to cart
                         </button>

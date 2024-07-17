@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import SearchIcon from '@assets/icons/search_glass.svg?react';
 
@@ -38,10 +39,42 @@ const filters: Readonly<Pick<Category, 'id' | 'name'>[]> = [
 function SearchBar() {
     const { useAppDispatch, useAppSelector } = useReduxStore();
     const dispatch = useAppDispatch();
+    const [urlSearchParameters, setUrlSearshParameters] = useSearchParams();
+    const urlSearchParametersReference = useRef(urlSearchParameters);
     const inputReference = useRef<HTMLInputElement>(null);
 
     const category = useAppSelector(categorySelector);
     const searchValue = useAppSelector(searchSelector);
+
+    useEffect(() => {
+        const titleUrl = urlSearchParametersReference.current.get('title');
+        const categoryUrl = urlSearchParametersReference.current.get('category');
+
+        if (titleUrl) {
+            dispatch(changeSearch(titleUrl));
+        }
+
+        if (categoryUrl) {
+            dispatch(changeActiveCategory(+categoryUrl));
+        }
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (category) {
+            urlSearchParameters.delete('category');
+            urlSearchParameters.append('category', category.toString());
+        } else {
+            urlSearchParameters.delete('category');
+        }
+
+        if (searchValue) {
+            urlSearchParameters.delete('title');
+            urlSearchParameters.append('title', searchValue);
+        } else {
+            urlSearchParameters.delete('title');
+        }
+        setUrlSearshParameters(urlSearchParameters);
+    }, [category, urlSearchParameters, searchValue, setUrlSearshParameters]);
 
     function handleChangeSearch(value: string) {
         dispatch(changeSearch(value));

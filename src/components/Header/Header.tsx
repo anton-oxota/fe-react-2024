@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink, useMatch, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
 import LoginIcon from '@assets/icons/log_out.svg?react';
@@ -24,6 +24,7 @@ import styles from './header.module.css';
 
 function Header() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { useAppDispatch, useAppSelector } = useReduxStore();
     const dispatch = useAppDispatch();
     const theme = useAppSelector(themeSelector);
@@ -136,6 +137,7 @@ function Header() {
                                 <>
                                     <Link
                                         to={PageName.LOGIN}
+                                        state={location.pathname}
                                         className={styles.actionButton}
                                         title="Login"
                                         onClick={handleToggleOpenBurgerMenu}

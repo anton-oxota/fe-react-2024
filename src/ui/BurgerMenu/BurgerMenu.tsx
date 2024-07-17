@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useMatch } from 'react-router-dom';
+import { NavLink, useLocation, useMatch } from 'react-router-dom';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
 import DarkThemeIcon from '@assets/icons/moon.svg?react';
@@ -21,6 +21,7 @@ interface BurgerMenuProps {
 function BurgerMenu({ isOpen, handleIsOpen }: BurgerMenuProps) {
     const dispatch = useDispatch();
     const theme = useSelector(themeSelector);
+    const location = useLocation();
 
     function handleChangeTheme(newTheme: PageTheme) {
         dispatch(changeTheme(newTheme));
@@ -61,7 +62,7 @@ function BurgerMenu({ isOpen, handleIsOpen }: BurgerMenuProps) {
                             {!hasToken && (
                                 <>
                                     <li onClick={handleIsOpen}>
-                                        <NavLink className={`${styles.burgerLink}`} to={'login'}>
+                                        <NavLink state={location.pathname} className={`${styles.burgerLink}`} to={'login'}>
                                             Login
                                         </NavLink>
                                     </li>

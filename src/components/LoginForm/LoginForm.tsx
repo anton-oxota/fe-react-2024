@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import LoginIcon from '@assets/icons/log_out.svg?react';
 import SingUpIcon from '@assets/icons/user_add.svg?react';
@@ -30,6 +30,8 @@ function LoginForm() {
     const { useAppDispatch, useAppSelector } = useReduxStore();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+    const previousLocation = location.state;
 
     const {
         value: emailValue,
@@ -81,9 +83,23 @@ function LoginForm() {
 
     useLayoutEffect(() => {
         if (accessToken) {
-            navigate('/');
+            if (previousLocation) {
+                navigate(previousLocation);
+            } else {
+                navigate(`/`);
+            }
         }
-    }, [accessToken, navigate, isLoading]);
+
+        return () => {
+            if (accessToken) {
+                if (previousLocation) {
+                    navigate(previousLocation);
+                } else {
+                    navigate(`/`);
+                }
+            }
+        };
+    }, [accessToken, navigate, isLoading, previousLocation]);
 
     function onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
