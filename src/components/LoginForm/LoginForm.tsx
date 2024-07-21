@@ -6,7 +6,7 @@ import SingUpIcon from '@assets/icons/user_add.svg?react';
 
 import { useReduxStore } from '@/hooks/useReduxStore';
 import { useValidateInput } from '@/hooks/useValidateInput';
-import type { LoginData } from '@/interfaces/Login';
+import { type LoginData, LoginFormField } from '@/interfaces/Login';
 import { errorMessagesSelector, isErrorSelector, isLoadingSelector, login } from '@/store/slices/loginSlice';
 import FormButton from '@/ui/FormButton/FormButton';
 import FormInput from '@/ui/FormInput/FormInput';
@@ -39,7 +39,7 @@ function LoginForm() {
         isInvalid: emailIsInvalid,
         errorMessage: emailErrorMessage,
         onChange: emailOnChange,
-        onBlure: emailOnBlure,
+        onBlur: emailonBlur,
         setErrorMessage: emailSetErrorMessage,
         setDidTouch: emailSetDidTouch,
     } = useValidateInput('', emailValidation);
@@ -50,7 +50,7 @@ function LoginForm() {
         isInvalid: passwordIsInvalid,
         errorMessage: passwordErrorMessage,
         onChange: passwordOnChange,
-        onBlure: passwordOnBlure,
+        onBlur: passwordonBlur,
         setErrorMessage: passwordSetErrorMessage,
         setDidTouch: passwordSetDidTouch,
     } = useValidateInput('', passwordValidation);
@@ -63,8 +63,8 @@ function LoginForm() {
     let passwordErrorText: string | undefined;
 
     if (Array.isArray(errorMessages)) {
-        emaliErrorText = errorMessages?.find((mgs: string) => mgs.includes('email'));
-        passwordErrorText = errorMessages?.find((mgs: string) => mgs.includes('password'));
+        emaliErrorText = errorMessages?.find((mgs: string) => mgs.includes(LoginFormField.EMAIL));
+        passwordErrorText = errorMessages?.find((mgs: string) => mgs.includes(LoginFormField.PASSWORD));
     }
 
     useEffect(() => {
@@ -106,8 +106,8 @@ function LoginForm() {
         const form = event.target;
         const fd = new FormData(form as HTMLFormElement);
 
-        const email = fd.get('email') as LoginData['email'] | null;
-        const password = fd.get('password') as LoginData['password'] | null;
+        const email = fd.get(LoginFormField.EMAIL) as LoginData['email'] | null;
+        const password = fd.get(LoginFormField.PASSWORD) as LoginData['password'] | null;
 
         let data: LoginData = {
             email: '',
@@ -128,23 +128,23 @@ function LoginForm() {
     return (
         <form className={styles.form} onSubmit={onSubmit}>
             <FormInput
-                name="email"
-                type="email"
+                name={LoginFormField.EMAIL}
+                type={LoginFormField.EMAIL}
                 placeholder="Email address"
                 value={emailValue}
                 onChange={(event) => emailOnChange(event.target.value)}
-                onBlur={emailOnBlure}
+                onBlur={emailonBlur}
                 isError={emailIsShowError}
                 errorMessage={emailErrorMessage}
             />
 
             <FormInput
-                name="password"
-                type="password"
+                name={LoginFormField.PASSWORD}
+                type={LoginFormField.PASSWORD}
                 placeholder="Password"
                 value={passwordValue}
                 onChange={(event) => passwordOnChange(event.target.value)}
-                onBlur={passwordOnBlure}
+                onBlur={passwordonBlur}
                 isError={passwordIsShowError}
                 errorMessage={passwordErrorMessage}
             />

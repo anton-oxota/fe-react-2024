@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { cn } from '@/utils/cn';
+
 import styles from './FormInput.module.css';
 
 interface FormInputInterface extends React.ComponentProps<'input'> {
@@ -8,14 +10,10 @@ interface FormInputInterface extends React.ComponentProps<'input'> {
 }
 
 function FormInput({ className, isError, errorMessage, ...props }: FormInputInterface) {
-    let classes = styles.input;
-
-    if (className) {
-        classes += ` ${className}`;
-    }
+    let classes = cn(styles.input, className);
 
     if (isError) {
-        classes += ` ${styles.error}`;
+        classes = cn(classes, styles.error);
     }
 
     return (

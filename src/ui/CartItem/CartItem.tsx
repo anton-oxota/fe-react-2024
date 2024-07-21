@@ -13,6 +13,8 @@ interface CartItemPropsInterface {
     cartItem: ProductCart;
 }
 
+const cartItemMaxQuantity = 99;
+
 function CartItem({ cartItem }: CartItemPropsInterface) {
     const { useAppDispatch } = useReduxStore();
     const dispatch = useAppDispatch();
@@ -36,8 +38,8 @@ function CartItem({ cartItem }: CartItemPropsInterface) {
         if (!Number.isNaN(newQuantity)) {
             let qty = newQuantity;
 
-            if (newQuantity > 99) {
-                qty = 99;
+            if (newQuantity > cartItemMaxQuantity) {
+                qty = cartItemMaxQuantity;
             }
 
             dispatch(setItemQuantity({ id, quantity: qty }));
@@ -64,7 +66,6 @@ function CartItem({ cartItem }: CartItemPropsInterface) {
                     <button onClick={handleRemoveFromCart}>
                         <MinusIcon />
                     </button>
-                    {/* <span>{quantity}</span> */}
                     <input
                         type="text"
                         value={quantity}

@@ -1,14 +1,12 @@
 import React from 'react';
-import { Link, NavLink, useLocation, useMatch, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useMatch, useNavigate } from 'react-router-dom';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
-import LoginIcon from '@assets/icons/log_out.svg?react';
 import LogoIcon from '@assets/icons/logo.svg?react';
 import MenuIcon from '@assets/icons/menu_duo_lg.svg?react';
 import DarkThemeIcon from '@assets/icons/moon.svg?react';
 import CartIcon from '@assets/icons/shopping_cart_01.svg?react';
 import LightThemeIcon from '@assets/icons/sun.svg?react';
-import SingUpIcon from '@assets/icons/user_add.svg?react';
 
 import { useReduxStore } from '@/hooks/useReduxStore';
 import { useToggle } from '@/hooks/useToggle';
@@ -18,13 +16,16 @@ import { PageTheme } from '@/interfaces/Themes';
 import { cartSelector } from '@/store/slices/cartSlice';
 import { changeTheme, themeSelector } from '@/store/slices/themeSlice';
 import { BurgerMenu } from '@/ui/BurgerMenu/BurgerMenu';
+import { LoginButtons } from '@/ui/LoginButtons/LoginButtons';
+import LogoutButtons from '@/ui/LogoutButtons/LogoutButtons';
 import { getAccessToken, logout } from '@/utils/token';
 
 import styles from './header.module.css';
 
+const isLogin = !!getAccessToken();
+
 function Header() {
     const navigate = useNavigate();
-    const location = useLocation();
     const { useAppDispatch, useAppSelector } = useReduxStore();
     const dispatch = useAppDispatch();
     const theme = useAppSelector(themeSelector);
@@ -42,8 +43,6 @@ function Header() {
     function handleChangeTheme(newTheme: PageTheme) {
         dispatch(changeTheme(newTheme));
     }
-
-    const isLogin = !!getAccessToken();
 
     const { verify } = useVerify();
 
@@ -123,34 +122,9 @@ function Header() {
                             </button>
 
                             {accessToken ? (
-                                <>
-                                    <Link to={''} className={styles.actionButton} onClick={logout}>
-                                        <LoginIcon />
-                                        Log out
-                                    </Link>
-                                    <button className={styles.actionButton} title="Sign" disabled={isLogin}>
-                                        <SingUpIcon />
-                                        Sign Up
-                                    </button>
-                                </>
+                                <LoginButtons logout={logout} isLogin={isLogin} />
                             ) : (
-                                <>
-                                    <Link
-                                        to={PageName.LOGIN}
-                                        state={location.pathname}
-                                        className={styles.actionButton}
-                                        title="Login"
-                                        onClick={handleToggleOpenBurgerMenu}
-                                    >
-                                        <LoginIcon />
-                                        Login
-                                    </Link>
-
-                                    <button className={`${styles.actionButton} ${styles.active}`} title="Sign">
-                                        <SingUpIcon />
-                                        Sign Up
-                                    </button>
-                                </>
+                                <LogoutButtons handleToggleOpenBurgerMenu={handleToggleOpenBurgerMenu} />
                             )}
                         </div>
                     </div>

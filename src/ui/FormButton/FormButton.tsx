@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { cn } from '@/utils/cn';
+
 import styles from './FormButton.module.css';
 
 interface FormButtonInterface extends React.ComponentProps<'button'> {
@@ -7,14 +9,10 @@ interface FormButtonInterface extends React.ComponentProps<'button'> {
 }
 
 function FormButton({ className, children, isActive, ...props }: FormButtonInterface) {
-    let classes = styles.formButton;
-
-    if (className) {
-        classes += ` ${className}`;
-    }
+    let classes = cn(styles.formButton, className);
 
     if (isActive) {
-        classes += ` ${styles.active}`;
+        classes = cn(classes, styles.active);
     }
 
     return (

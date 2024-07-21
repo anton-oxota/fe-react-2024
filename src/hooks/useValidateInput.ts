@@ -11,7 +11,7 @@ export function useValidateInput(initialState: string, validateFunction: Functio
         setValue(newValue);
     }
 
-    function onBlure() {
+    function onBlur() {
         setDidTouch(true);
     }
 
@@ -30,7 +30,7 @@ export function useValidateInput(initialState: string, validateFunction: Functio
         isInvalid,
         errorMessage,
         onChange,
-        onBlure,
+        onBlur,
         setErrorMessage,
         setDidTouch,
     };

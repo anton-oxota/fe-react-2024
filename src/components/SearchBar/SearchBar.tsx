@@ -6,6 +6,7 @@ import SearchIcon from '@assets/icons/search_glass.svg?react';
 import { useReduxStore } from '@/hooks/useReduxStore';
 import type { Category } from '@/interfaces/Category';
 import { SortBy } from '@/interfaces/Filters';
+import { QueryString } from '@/interfaces/Query';
 import { categorySelector, changeActiveCategory, changeSearch, searchSelector } from '@/store/slices/filtersSlice';
 import { CustomSelector } from '@/ui/CustomSelector/CustomSelector';
 import FilterButton from '@/ui/FilterButton/FilterButton';
@@ -47,31 +48,31 @@ function SearchBar() {
     const searchValue = useAppSelector(searchSelector);
 
     useEffect(() => {
-        const titleUrl = urlSearchParametersReference.current.get('title');
-        const categoryUrl = urlSearchParametersReference.current.get('category');
+        const titleUrlParameter = urlSearchParametersReference.current.get(QueryString.TITLE);
+        const categoryUrlParameter = urlSearchParametersReference.current.get(QueryString.CATEGORY);
 
-        if (titleUrl) {
-            dispatch(changeSearch(titleUrl));
+        if (titleUrlParameter) {
+            dispatch(changeSearch(titleUrlParameter));
         }
 
-        if (categoryUrl) {
-            dispatch(changeActiveCategory(+categoryUrl));
+        if (categoryUrlParameter) {
+            dispatch(changeActiveCategory(+categoryUrlParameter));
         }
     }, [dispatch]);
 
     useEffect(() => {
         if (category) {
-            urlSearchParameters.delete('category');
-            urlSearchParameters.append('category', category.toString());
+            urlSearchParameters.delete(QueryString.CATEGORY);
+            urlSearchParameters.append(QueryString.CATEGORY, category.toString());
         } else {
-            urlSearchParameters.delete('category');
+            urlSearchParameters.delete(QueryString.CATEGORY);
         }
 
         if (searchValue) {
-            urlSearchParameters.delete('title');
-            urlSearchParameters.append('title', searchValue);
+            urlSearchParameters.delete(QueryString.TITLE);
+            urlSearchParameters.append(QueryString.TITLE, searchValue);
         } else {
-            urlSearchParameters.delete('title');
+            urlSearchParameters.delete(QueryString.TITLE);
         }
         setUrlSearshParameters(urlSearchParameters);
     }, [category, urlSearchParameters, searchValue, setUrlSearshParameters]);
