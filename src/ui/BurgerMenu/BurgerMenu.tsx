@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useMatch } from 'react-router-dom';
+import { NavLink, useLocation, useMatch } from 'react-router-dom';
 
 import ThemeDivider from '@assets/icons/h-divider.svg?react';
 import DarkThemeIcon from '@assets/icons/moon.svg?react';
@@ -9,6 +9,7 @@ import LightThemeIcon from '@assets/icons/sun.svg?react';
 import { PageName } from '@/interfaces/Pages';
 import { PageTheme } from '@/interfaces/Themes';
 import { changeTheme, themeSelector } from '@/store/slices/themeSlice';
+import { getAccessToken, logout } from '@/utils/token';
 
 import styles from './BurgerMenu.module.css';
 
@@ -20,6 +21,7 @@ interface BurgerMenuProps {
 function BurgerMenu({ isOpen, handleIsOpen }: BurgerMenuProps) {
     const dispatch = useDispatch();
     const theme = useSelector(themeSelector);
+    const location = useLocation();
 
     function handleChangeTheme(newTheme: PageTheme) {
         dispatch(changeTheme(newTheme));
@@ -27,6 +29,12 @@ function BurgerMenu({ isOpen, handleIsOpen }: BurgerMenuProps) {
 
     const aboutUrlMatch = useMatch('');
     const productsUrlMatch = useMatch(`${PageName.PRODUCTS}`);
+    const hasToken = !!getAccessToken();
+
+    function handleLogout() {
+        logout();
+        handleIsOpen();
+    }
 
     return (
         <div className={`${styles.burgerMenu} ${styles.mobile} ${isOpen ? styles.open : ''}`}>
@@ -44,16 +52,27 @@ function BurgerMenu({ isOpen, handleIsOpen }: BurgerMenuProps) {
                                     Products
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink className={`${styles.burgerLink}`} to={''}>
-                                    Login
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink className={`${styles.burgerLink}`} to={''}>
-                                    Sing up
-                                </NavLink>
-                            </li>
+                            {hasToken && (
+                                <li onClick={handleLogout}>
+                                    <NavLink className={`${styles.burgerLink}`} to={''}>
+                                        Log out
+                                    </NavLink>
+                                </li>
+                            )}
+                            {!hasToken && (
+                                <>
+                                    <li onClick={handleIsOpen}>
+                                        <NavLink state={location.pathname} className={`${styles.burgerLink}`} to={'login'}>
+                                            Login
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink className={`${styles.burgerLink}`} to={''}>
+                                            Sing up
+                                        </NavLink>
+                                    </li>
+                                </>
+                            )}
                         </ul>
                     </nav>
                     <div className={styles.burgerMenuThemeSwitch}>

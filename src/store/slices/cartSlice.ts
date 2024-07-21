@@ -7,7 +7,7 @@ import type { RootStore } from '..';
 
 const localCart = localStorage.getItem('cart');
 
-type ProductCart = Product & { quantity: number };
+export type ProductCart = Product & { quantity: number };
 
 interface InitialStateInterface {
     cart: ProductCart[];
@@ -48,6 +48,21 @@ const cartSlice = createSlice({
             } else {
                 state.cart.splice(exisitingItemIndex, 1);
             }
+
+            localStorage.setItem('cart', JSON.stringify(state.cart));
+        },
+        removeItemFromCart(state, action: PayloadAction<Product['id']>) {
+            state.cart = state.cart.filter((cartItem) => cartItem.id !== action.payload);
+            localStorage.setItem('cart', JSON.stringify(state.cart));
+        },
+        setItemQuantity(state, action: PayloadAction<Pick<ProductCart, 'id' | 'quantity'>>) {
+            const itemId = action.payload.id;
+            const exisitingItem = state.cart.find((cartItem) => cartItem.id === itemId);
+
+            if (exisitingItem) {
+                exisitingItem.quantity = action.payload.quantity;
+            }
+            localStorage.setItem('cart', JSON.stringify(state.cart));
         },
     },
 });
@@ -55,4 +70,4 @@ const cartSlice = createSlice({
 export const cartSelector = (state: RootStore) => state.cartReducer.cart;
 
 export default cartSlice.reducer;
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, removeItemFromCart, setItemQuantity } = cartSlice.actions;

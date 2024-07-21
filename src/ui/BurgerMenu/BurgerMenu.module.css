@@ -5,6 +5,7 @@ body:has(.burgerMenu.open) {
 .burgerMenu {
   padding-top: 70px;
   position: fixed;
+  visibility: hidden;
   top: -100%;
   left: 0;
   width: 100%;
@@ -15,6 +16,7 @@ body:has(.burgerMenu.open) {
 }
 
 .burgerMenu.open {
+  visibility: visible;
   top: 0;
 }
 
@@ -72,6 +74,10 @@ body:has(.burgerMenu.open) {
 
 
 @media (min-width: 1290px) {
+
+  body:has(.burgerMenu.open) {
+    overflow: unset;
+  }
 
   .mobile {
     display: none;

@@ -1,11 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import SearchIcon from '@assets/icons/search_glass.svg?react';
 
 import { useReduxStore } from '@/hooks/useReduxStore';
 import type { Category } from '@/interfaces/Category';
 import { SortBy } from '@/interfaces/Filters';
-import { categorySelector, changeActiveCategory, changeSearch } from '@/store/slices/filtersSlice';
+import { QueryString } from '@/interfaces/Query';
+import { categorySelector, changeActiveCategory, changeSearch, searchSelector } from '@/store/slices/filtersSlice';
 import { CustomSelector } from '@/ui/CustomSelector/CustomSelector';
 import FilterButton from '@/ui/FilterButton/FilterButton';
 
@@ -38,9 +40,42 @@ const filters: Readonly<Pick<Category, 'id' | 'name'>[]> = [
 function SearchBar() {
     const { useAppDispatch, useAppSelector } = useReduxStore();
     const dispatch = useAppDispatch();
+    const [urlSearchParameters, setUrlSearshParameters] = useSearchParams();
+    const urlSearchParametersReference = useRef(urlSearchParameters);
     const inputReference = useRef<HTMLInputElement>(null);
 
     const category = useAppSelector(categorySelector);
+    const searchValue = useAppSelector(searchSelector);
+
+    useEffect(() => {
+        const titleUrlParameter = urlSearchParametersReference.current.get(QueryString.TITLE);
+        const categoryUrlParameter = urlSearchParametersReference.current.get(QueryString.CATEGORY);
+
+        if (titleUrlParameter) {
+            dispatch(changeSearch(titleUrlParameter));
+        }
+
+        if (categoryUrlParameter) {
+            dispatch(changeActiveCategory(+categoryUrlParameter));
+        }
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (category) {
+            urlSearchParameters.delete(QueryString.CATEGORY);
+            urlSearchParameters.append(QueryString.CATEGORY, category.toString());
+        } else {
+            urlSearchParameters.delete(QueryString.CATEGORY);
+        }
+
+        if (searchValue) {
+            urlSearchParameters.delete(QueryString.TITLE);
+            urlSearchParameters.append(QueryString.TITLE, searchValue);
+        } else {
+            urlSearchParameters.delete(QueryString.TITLE);
+        }
+        setUrlSearshParameters(urlSearchParameters);
+    }, [category, urlSearchParameters, searchValue, setUrlSearshParameters]);
 
     function handleChangeSearch(value: string) {
         dispatch(changeSearch(value));
@@ -63,7 +98,7 @@ function SearchBar() {
             <div className="container">
                 <div className={styles.wrapper}>
                     <form className={styles.form} onSubmit={handleSearchSubmit} autoComplete="off">
-                        <input ref={inputReference} type="text" name="search" placeholder="Search..." />
+                        <input ref={inputReference} type="text" name="search" placeholder="Search..." defaultValue={searchValue} />
                         <button>
                             <SearchIcon />
                         </button>

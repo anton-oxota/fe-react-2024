@@ -97,12 +97,12 @@ function ProductsList() {
         <ProductCard key={productData.title} productRef={lastElement} productData={productData} />
     ));
 
-    if (isFetching && !isMobile) {
-        productsListContent = <p>Loading...</p>;
+    if (totalOfProducts === 0 && (search || category)) {
+        productsListContent = <p>No Items</p>;
     } else if (error && !isMobile) {
         productsListContent = <p>{error}</p>;
-    } else if (totalOfProducts === 0 && (search || category)) {
-        productsListContent = <p>No Items</p>;
+    } else if ((productsData.length === 0 || isFetching) && !isMobile) {
+        productsListContent = <p>Loading...</p>;
     }
 
     const isMobileFirstLoading = isMobile && !error && productsData.length === 0 && !fetchedData[1];

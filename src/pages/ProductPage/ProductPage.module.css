@@ -90,6 +90,10 @@
   color: #FFF;
 }
 
+.productAddToCart:disabled {
+  opacity: .3;
+}
+
 .desctop {
   display: none;
 }

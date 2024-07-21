@@ -1,0 +1,31 @@
+.auth {
+  padding-top: 70px;
+}
+
+.title {
+  font-family: var(--font-family);
+  text-align: center;
+  margin-top: 30px;
+  font-weight: 600;
+  font-size: 27px;
+  color: var(--darkest-grey);
+}
+
+@media (min-width: 1290px) {
+
+  .wrapper {
+    padding: 80px 200px;
+    margin: 60px auto;
+    width: 775px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--grey-3, #CCC) ;
+    border-radius: 40px;
+  }
+
+  .title {
+    margin-top: unset;
+  }
+}

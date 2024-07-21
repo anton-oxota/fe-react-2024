@@ -73,6 +73,10 @@
   border: 1px solid var(--grey-3);
 }
 
+.buy:disabled {
+  opacity: .3;
+}
+
 .buy > svg > path {
   stroke: var(--darkest-grey);
 }
